@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: coletanea_icr
+    restart: always
+    ports:
+      - "127.0.0.1:3000:3000"
