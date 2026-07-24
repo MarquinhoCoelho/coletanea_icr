@@ -12,17 +12,14 @@
 </head>
 <body>
 
-  <!-- BOTAO PARA SAIR DO MODO PROJETOR -->
-  <button class="projector-exit-btn" onclick="alternarModoProjetor()">✕ Sair do Modo Projetor</button>
+  <button class="projector-exit-btn" onclick="alternarModoProjetor()">Sair do Modo Projetor</button>
 
-  <!-- CABEÇALHO DO SITE (HEADER) -->
   <header class="site-header">
     <div class="brand-section">
-      <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()" aria-label="Abrir Menu">
-        Menu ☰
+      <button class="toggle-sidebar-btn" id="toggleSidebarBtn" onclick="toggleSidebar()" aria-label="Alternar Menu">
+        Menu
       </button>
       <a href="#" class="brand-logo-link" onclick="location.reload(); return false;">
-        <!-- Tenta carregar icr_logo_sem_fundo.png e faz fallback para icr_logo_maior.png -->
         <img 
           src="icr_logo_sem_fundo.png" 
           onerror="this.onerror=null; this.src='icr_logo_maior.png';" 
@@ -36,40 +33,35 @@
       </a>
     </div>
 
-    <!-- CAMPO DE BUSCA CENTRALIZADO -->
-    <div class="search-section">
-      <div class="search-input-wrapper">
-        <span class="search-icon">🔍</span>
-        <input 
-          type="text" 
-          id="searchInput" 
-          class="search-input" 
-          placeholder="Buscar por nº ou título do hino..." 
-          oninput="filtrarHinos()" 
-          autocomplete="off"
-        >
-        <button class="search-clear-btn" id="searchClearBtn" onclick="limparBusca()" title="Limpar busca">&times;</button>
-      </div>
-    </div>
-
     <div class="header-right">
       <span class="repertoire-badge" id="totalCounter">0 hinos</span>
     </div>
   </header>
 
-  <!-- ESTRUTURA DE LAYOUT PRINCIPAL -->
   <div class="app-layout">
 
-    <!-- BARRA LATERAL DE NAVEGAÇÃO (REPERTÓRIO) -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <div class="sidebar-title-group">
+        <div class="sidebar-top-row">
           <span class="sidebar-title">Repertório</span>
+          <button class="sort-btn" id="sortBtn" onclick="alternarOrdenacao()" title="Alternar Ordenação">
+            Ordem: Nº
+          </button>
         </div>
-        <button class="sort-btn" id="sortBtn" onclick="alternarOrdenacao()" title="Alternar Ordenação">
-          Ordem: Nº
-        </button>
+
+        <div class="sidebar-search-box">
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="sidebar-search-input" 
+            placeholder="Buscar hino por número ou título..." 
+            oninput="filtrarHinos()" 
+            autocomplete="off"
+          >
+          <button class="search-clear-btn" id="searchClearBtn" onclick="limparBusca()" title="Limpar busca">&times;</button>
+        </div>
       </div>
+
       <div class="song-list-container">
         <ul class="song-list" id="listaHinos"></ul>
         <div id="noResults" class="no-results" style="display: none;">
@@ -78,13 +70,11 @@
       </div>
     </aside>
 
-    <!-- ÁREA PRINCIPAL DE LEITURA -->
     <main class="main-content">
       <div id="conteudoHino">
         <div class="empty-state">
-          <div class="empty-state-icon">🎶</div>
           <h2>Coletânea ICR Florianópolis</h2>
-          <p>Selecione um louvor na lista ao lado ou digite o número/título na busca acima para visualizar a letra e cifras.</p>
+          <p>Selecione um louvor no menu lateral para visualizar a letra e cifras.</p>
         </div>
       </div>
     </main>
@@ -92,7 +82,6 @@
   </div>
 
   <script>
-    // Estado da Aplicação
     let hinosData = [];
     let hinoAtualId = null;
     let ordemAlfabetica = false;
@@ -102,7 +91,6 @@
     let autoscrollTimer = null;
     let autoscrollVelocidade = 1;
 
-    // Carrega a lista de hinos via API
     async function carregarHinos() {
       try {
         const res = await fetch('/api/hinos');
@@ -164,7 +152,7 @@
           <a href="#${hino.id}" class="song-link" onclick="selecionarHino(${hino.id}); return false;">
             <span class="song-number">${numFormatado}</span>
             <span class="song-title-text">${escaparHTML(hino.titulo)}</span>
-            ${hino.observacao ? `<span class="song-obs-dot" title="${escaparHTML(hino.observacao)}"></span>` : ''}
+            ${hino.observacao ? `<span class="song-obs-badge">Ensaiar</span>` : ''}
           </a>
         `;
         listaEl.appendChild(li);
@@ -200,15 +188,12 @@
             <h1 class="hino-title">${escaparHTML(hino.titulo)}</h1>
             ${hino.observacao ? `
               <div class="observacao-bar">
-                <span>📌 ${escaparHTML(hino.observacao)}</span>
+                <span>Observação: ${escaparHTML(hino.observacao)}</span>
               </div>
             ` : ''}
           </header>
 
-          <!-- BARRA DE RECURSOS (ESTILO CIFRA CLUB PREMIUM) -->
           <div class="cifra-toolbar">
-            
-            <!-- Grupo 1: Controles de Fonte -->
             <div class="toolbar-group">
               <button class="btn-tool" onclick="alterarTamanhoFonte(-10)" title="Diminuir fonte">A-</button>
               <span class="font-size-indicator" id="fontSizeLabel">${tamanhoFontePercent}%</span>
@@ -218,7 +203,6 @@
 
             <div class="toolbar-divider"></div>
 
-            <!-- Grupo 2: Visibilidade de Cifras -->
             <div class="toolbar-group">
               <button class="btn-tool ${exibirCifras ? 'active' : ''}" id="btnToggleCifras" onclick="alternarExibicaoCifras()">
                 ${exibirCifras ? 'Cifras: ON' : 'Somente Letra'}
@@ -227,10 +211,9 @@
 
             <div class="toolbar-divider"></div>
 
-            <!-- Grupo 3: Auto Scroll -->
             <div class="toolbar-group">
               <button class="btn-tool ${autoscrollAtivo ? 'active' : ''}" id="btnAutoScroll" onclick="alternarAutoScroll()">
-                ${autoscrollAtivo ? 'Rolagem: ON ⏸' : 'Rolagem 🚀'}
+                ${autoscrollAtivo ? 'Rolagem: ON' : 'Auto-scroll'}
               </button>
               <select class="speed-select" id="speedSelect" onchange="mudarVelocidadeAutoScroll(this.value)" title="Velocidade de rolagem">
                 <option value="1" ${autoscrollVelocidade == 1 ? 'selected' : ''}>1x</option>
@@ -241,19 +224,16 @@
 
             <div class="toolbar-divider"></div>
 
-            <!-- Grupo 4: Utilitários -->
             <div class="toolbar-group">
               <button class="btn-tool" onclick="alternarModoProjetor()" title="Modo de Leitura / Projetor">
-                Projetor 🖥️
+                Modo Projetor
               </button>
               <button class="btn-tool" onclick="copiarLetra()" title="Copiar letra">
                 Copiar
               </button>
             </div>
-
           </div>
 
-          <!-- LETRA E CIFRAS -->
           <div class="lyric-container">
             <pre class="lyric-content" id="lyricContent" style="font-size: calc(1.05rem * ${tamanhoFontePercent / 100});">${formatarLetraECifra(hino.letra)}</pre>
           </div>
@@ -354,11 +334,11 @@
 
       if (autoscrollAtivo) {
         btn.classList.add('active');
-        btn.textContent = 'Rolagem: ON ⏸';
+        btn.textContent = 'Rolagem: ON';
         iniciarAutoScroll();
       } else {
         btn.classList.remove('active');
-        btn.textContent = 'Rolagem 🚀';
+        btn.textContent = 'Auto-scroll';
         pararAutoScroll();
       }
     }
@@ -427,7 +407,12 @@
     }
 
     function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
+      const sidebar = document.getElementById('sidebar');
+      if (window.innerWidth <= 768) {
+        sidebar.classList.toggle('open');
+      } else {
+        sidebar.classList.toggle('collapsed');
+      }
     }
 
     function escaparHTML(str) {

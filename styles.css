@@ -1,44 +1,22 @@
-/* ==========================================================================
-   Coletânea de Louvores ICR Florianópolis - Authentic Cifra Club Design System
-   Visual: 100% Claro | Verde Institucional #0f6856 | Tipografia Premium Humanizada
-   ========================================================================== */
-
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Cores Institucionais ICR */
   --primary: #0f6856;
   --primary-hover: #0a4d3f;
   --primary-active: #06362c;
   --primary-light: #f0f7f5;
   --primary-border: #c3e2db;
-
-  /* Superfícies & Fundo (100% Claro, Sóbrio e Humano) */
   --bg-main: #ffffff;
   --bg-secondary: #f8fafc;
   --bg-tertiary: #f1f5f9;
-  --bg-card: #ffffff;
-  
-  /* Textos */
   --text-main: #0f172a;
   --text-secondary: #475569;
   --text-muted: #64748b;
   --text-light: #94a3b8;
-  
-  /* Bordas e Linhas de Separação */
-  --border-light: #f1f5f9;
   --border: #e2e8f0;
   --border-strong: #cbd5e1;
-  
-  /* Sombras Sutis (Humanizadas) */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.02);
-  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.05);
-
-  /* Tamanho de Fonte da Cifra */
+  --border-light: #f1f5f9;
   --lyric-font-size: 1.05rem;
-  
-  /* Tipografia */
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'Fira Code', 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
 }
@@ -55,63 +33,43 @@ html, body {
   background-color: var(--bg-main);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
-}
-
-/* ==========================================================================
-   CABECALHO DO SITE (HEADER ESTILO CIFRA CLUB)
-   ========================================================================== */
 .site-header {
-  height: 64px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.75rem;
+  padding: 0 1.5rem;
   background-color: var(--bg-main);
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: var(--shadow-sm);
 }
 
 .brand-section {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
-.menu-toggle {
-  display: none;
-  background: var(--bg-secondary);
+.toggle-sidebar-btn {
+  background: var(--bg-main);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 7px 12px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  border-radius: 2px;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
   color: var(--text-secondary);
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.menu-toggle:hover {
-  background-color: var(--bg-tertiary);
+.toggle-sidebar-btn:hover {
+  background-color: var(--bg-secondary);
   color: var(--primary);
+  border-color: var(--primary-border);
 }
 
 .brand-logo-link {
@@ -122,14 +80,9 @@ html, body {
 }
 
 .brand-logo {
-  height: 42px;
+  height: 38px;
   width: auto;
   object-fit: contain;
-  transition: transform 0.2s ease;
-}
-
-.brand-logo:hover {
-  transform: scale(1.02);
 }
 
 .brand-text-block {
@@ -138,10 +91,10 @@ html, body {
 }
 
 .brand-title {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 800;
   color: var(--primary);
-  letter-spacing: -0.3px;
+  letter-spacing: -0.2px;
   line-height: 1.2;
 }
 
@@ -149,69 +102,6 @@ html, body {
   font-size: 0.75rem;
   color: var(--text-muted);
   font-weight: 600;
-  letter-spacing: 0.2px;
-}
-
-/* Campo de Busca Centralizado */
-.search-section {
-  flex: 1;
-  max-width: 480px;
-  margin: 0 2rem;
-}
-
-.search-input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.search-icon {
-  position: absolute;
-  left: 12px;
-  color: var(--text-light);
-  font-size: 0.9rem;
-  pointer-events: none;
-}
-
-.search-input {
-  width: 100%;
-  height: 40px;
-  padding: 0 38px 0 36px;
-  font-size: 0.875rem;
-  font-family: var(--font-sans);
-  color: var(--text-main);
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-.search-input:focus {
-  background-color: var(--bg-main);
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(15, 104, 86, 0.1);
-}
-
-.search-clear-btn {
-  position: absolute;
-  right: 10px;
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 2px 6px;
-  display: none;
-  border-radius: 50%;
-}
-
-.search-clear-btn:hover {
-  color: var(--text-main);
-}
-
-.search-clear-btn.active {
-  display: block;
 }
 
 .header-right {
@@ -221,29 +111,20 @@ html, body {
 }
 
 .repertoire-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
   font-size: 0.78rem;
   font-weight: 700;
   color: var(--primary);
   background-color: var(--primary-light);
   border: 1px solid var(--primary-border);
   padding: 4px 10px;
-  border-radius: 20px;
+  border-radius: 2px;
 }
 
-/* ==========================================================================
-   LAYOUT PRINCIPAL
-   ========================================================================== */
 .app-layout {
   display: flex;
-  min-height: calc(100vh - 64px);
+  min-height: calc(100vh - 60px);
 }
 
-/* ==========================================================================
-   BARRA LATERAL (REPERTÓRIO DE LOUVORES)
-   ========================================================================== */
 .sidebar {
   width: 320px;
   background-color: var(--bg-secondary);
@@ -251,21 +132,28 @@ html, body {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  transition: width 0.2s ease, margin-left 0.2s ease, transform 0.2s ease;
+}
+
+.sidebar.collapsed {
+  width: 0;
+  margin-left: -320px;
+  overflow: hidden;
 }
 
 .sidebar-header {
-  padding: 1.1rem 1.25rem 0.85rem;
+  padding: 1rem;
   border-bottom: 1px solid var(--border);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 10px;
   background-color: var(--bg-secondary);
 }
 
-.sidebar-title-group {
+.sidebar-top-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
 }
 
 .sidebar-title {
@@ -279,8 +167,8 @@ html, body {
 .sort-btn {
   background: var(--bg-main);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 3px 9px;
+  border-radius: 2px;
+  padding: 3px 8px;
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-secondary);
@@ -291,13 +179,56 @@ html, body {
 .sort-btn:hover {
   color: var(--primary);
   border-color: var(--primary-border);
-  background-color: var(--primary-light);
+}
+
+.sidebar-search-box {
+  width: 100%;
+  position: relative;
+}
+
+.sidebar-search-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 30px 0 10px;
+  font-size: 0.85rem;
+  font-family: var(--font-sans);
+  color: var(--text-main);
+  background-color: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.sidebar-search-input:focus {
+  border-color: var(--primary);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(15, 104, 86, 0.15);
+  z-index: 10;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  display: none;
+}
+
+.search-clear-btn.active {
+  display: block;
 }
 
 .song-list-container {
   flex: 1;
   overflow-y: auto;
-  padding: 0.5rem 0.5rem 1rem;
+  padding: 0;
 }
 
 .song-list {
@@ -305,21 +236,22 @@ html, body {
 }
 
 .song-item {
-  margin-bottom: 2px;
+  margin: 0;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .song-link {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
+  gap: 10px;
+  padding: 11px 14px;
   color: var(--text-main);
   text-decoration: none;
-  border-radius: 8px;
   font-size: 0.88rem;
   font-weight: 600;
-  transition: all 0.15s ease;
   border-left: 3px solid transparent;
+  border-radius: 0;
+  transition: background-color 0.15s ease, border-left-color 0.15s ease;
 }
 
 .song-link:hover {
@@ -331,7 +263,7 @@ html, body {
   background-color: var(--primary-light);
   color: var(--primary);
   font-weight: 700;
-  border-left-color: var(--primary);
+  border-left: 4px solid var(--primary);
 }
 
 .song-number {
@@ -339,18 +271,11 @@ html, body {
   font-size: 0.78rem;
   font-weight: 700;
   color: var(--text-muted);
-  background-color: var(--bg-main);
-  border: 1px solid var(--border);
-  padding: 2px 6px;
-  border-radius: 4px;
-  min-width: 28px;
-  text-align: center;
+  min-width: 24px;
 }
 
 .song-item.active .song-number {
   color: var(--primary);
-  background-color: var(--bg-main);
-  border-color: var(--primary-border);
 }
 
 .song-title-text {
@@ -360,12 +285,14 @@ html, body {
   text-overflow: ellipsis;
 }
 
-.song-obs-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: #f59e0b;
-  flex-shrink: 0;
+.song-obs-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #b45309;
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+  padding: 1px 5px;
+  border-radius: 2px;
 }
 
 .no-results {
@@ -375,13 +302,10 @@ html, body {
   font-size: 0.85rem;
 }
 
-/* ==========================================================================
-   ÁREA PRINCIPAL DE EXIBIÇÃO DO LOUVOR
-   ========================================================================== */
 .main-content {
   flex: 1;
   padding: 2rem 3rem;
-  max-width: 920px;
+  max-width: 960px;
   margin: 0 auto;
   width: 100%;
 }
@@ -391,50 +315,43 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 420px;
+  min-height: 400px;
   text-align: center;
   color: var(--text-muted);
-  border: 2px dashed var(--border);
-  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
   padding: 3rem 2rem;
   background-color: var(--bg-secondary);
 }
 
-.empty-state-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  color: var(--primary);
-}
-
 .empty-state h2 {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--text-main);
   margin-bottom: 0.5rem;
 }
 
 .empty-state p {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   max-width: 420px;
   line-height: 1.5;
 }
 
-/* Cabeçalho do Hino */
 .hino-card {
   background-color: var(--bg-main);
 }
 
 .hino-header {
   margin-bottom: 1.5rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--border);
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--primary);
 }
 
 .hino-meta-top {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 0.75rem;
+  gap: 8px;
+  margin-bottom: 0.5rem;
 }
 
 .hino-num-tag {
@@ -444,8 +361,8 @@ html, body {
   color: var(--primary);
   background-color: var(--primary-light);
   border: 1px solid var(--primary-border);
-  padding: 3px 8px;
-  border-radius: 6px;
+  padding: 2px 6px;
+  border-radius: 2px;
 }
 
 .hino-tom-badge {
@@ -454,15 +371,15 @@ html, body {
   color: var(--text-secondary);
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-strong);
-  padding: 3px 10px;
-  border-radius: 6px;
+  padding: 2px 8px;
+  border-radius: 2px;
 }
 
 .hino-title {
   font-size: 2.1rem;
   font-weight: 800;
   color: var(--text-main);
-  letter-spacing: -0.8px;
+  letter-spacing: -0.6px;
   line-height: 1.2;
   margin-bottom: 0.75rem;
 }
@@ -470,33 +387,27 @@ html, body {
 .observacao-bar {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
   background-color: #fffbeb;
   color: #b45309;
   border: 1px solid #fde68a;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 5px 10px;
+  border-radius: 2px;
   font-size: 0.82rem;
   font-weight: 600;
 }
 
-/* ==========================================================================
-   BARRA DE RECURSOS E FERRAMENTAS (AUTÊNTICO CIFRA CLUB)
-   ========================================================================== */
 .cifra-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 0.75rem 1.1rem;
+  border-radius: 2px;
+  padding: 0.6rem 1rem;
   margin-bottom: 2rem;
-  box-shadow: var(--shadow-sm);
   position: sticky;
-  top: 76px;
+  top: 72px;
   z-index: 80;
 }
 
@@ -508,24 +419,21 @@ html, body {
 
 .toolbar-divider {
   width: 1px;
-  height: 24px;
-  background-color: var(--border);
+  height: 20px;
+  background-color: var(--border-strong);
   margin: 0 4px;
 }
 
 .btn-tool {
   background-color: var(--bg-main);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 6px 12px;
+  border-radius: 2px;
+  padding: 5px 11px;
   font-size: 0.82rem;
   font-weight: 700;
   color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.15s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
 }
 
 .btn-tool:hover {
@@ -545,15 +453,14 @@ html, body {
   font-family: var(--font-mono);
   font-weight: 700;
   color: var(--text-muted);
-  padding: 0 6px;
   min-width: 44px;
   text-align: center;
 }
 
 .speed-select {
-  padding: 6px 8px;
+  padding: 5px 8px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 2px;
   background-color: var(--bg-main);
   font-size: 0.8rem;
   font-weight: 700;
@@ -562,13 +469,6 @@ html, body {
   cursor: pointer;
 }
 
-.speed-select:focus {
-  border-color: var(--primary);
-}
-
-/* ==========================================================================
-   FORMATADOR DE LETRA E CIFRA (MONOSPACED PREMIUM)
-   ========================================================================== */
 .lyric-container {
   background-color: var(--bg-main);
   padding: 0.5rem 0;
@@ -583,23 +483,16 @@ html, body {
   color: var(--text-main);
 }
 
-/* Acordes formatados com Verde Institucional ICR */
 .chord {
   font-weight: 700;
   color: var(--primary);
-  background-color: rgba(15, 104, 86, 0.04);
-  padding: 0 2px;
-  border-radius: 3px;
 }
 
-/* Linha de Cifras */
 .chord-line {
   color: var(--primary);
   font-weight: 700;
-  letter-spacing: 0.2px;
 }
 
-/* Seções da música: [Intro], [Refrão], [Primeira Parte] */
 .song-section-header {
   display: inline-block;
   font-family: var(--font-sans);
@@ -610,15 +503,12 @@ html, body {
   color: var(--primary-hover);
   background-color: var(--primary-light);
   border: 1px solid var(--primary-border);
-  padding: 3px 10px;
-  border-radius: 6px;
+  padding: 3px 8px;
+  border-radius: 2px;
   margin-top: 1.25rem;
   margin-bottom: 0.5rem;
 }
 
-/* ==========================================================================
-   MODO PROJETOR (LEITURA LIMPA E ALTO CONTRASTE)
-   ========================================================================== */
 body.projector-mode .site-header,
 body.projector-mode .sidebar {
   display: none !important;
@@ -641,7 +531,6 @@ body.projector-mode .hino-title {
 
 body.projector-mode .hino-header {
   text-align: center;
-  border-bottom: 2px solid var(--primary);
 }
 
 body.projector-mode .hino-meta-top {
@@ -659,7 +548,6 @@ body.projector-mode .lyric-content {
   line-height: 2;
 }
 
-/* Exit button for projector mode */
 .projector-exit-btn {
   display: none;
   position: fixed;
@@ -669,32 +557,20 @@ body.projector-mode .lyric-content {
   color: #ffffff;
   border: none;
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 2px;
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
   z-index: 1000;
-  box-shadow: var(--shadow-lg);
 }
 
 body.projector-mode .projector-exit-btn {
   display: block;
 }
 
-/* ==========================================================================
-   RESPONSIVIDADE (MOBILE / TABLETS)
-   ========================================================================== */
 @media (max-width: 768px) {
-  .menu-toggle {
-    display: inline-block;
-  }
-
   .brand-subtitle {
     display: none;
-  }
-
-  .search-section {
-    margin: 0 0.5rem;
   }
 
   .repertoire-badge {
@@ -703,13 +579,13 @@ body.projector-mode .projector-exit-btn {
 
   .sidebar {
     position: fixed;
-    top: 64px;
+    top: 60px;
     left: 0;
     bottom: 0;
     z-index: 90;
     transform: translateX(-100%);
-    transition: transform 0.25s ease;
-    box-shadow: var(--shadow-lg);
+    width: 290px;
+    margin-left: 0 !important;
   }
 
   .sidebar.open {
@@ -721,7 +597,7 @@ body.projector-mode .projector-exit-btn {
   }
 
   .cifra-toolbar {
-    top: 64px;
+    top: 60px;
     padding: 0.6rem;
     flex-direction: column;
     align-items: stretch;
