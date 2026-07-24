@@ -6,6 +6,7 @@ html, body {
   background-color: #ffffff;
   color: #0f172a;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 .lyric-content {
@@ -43,8 +44,17 @@ html, body {
   margin-bottom: 0.35rem;
 }
 
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 body.projector-mode header,
-body.projector-mode aside {
+body.projector-mode aside,
+body.projector-mode #sidebarOverlay {
   display: none !important;
 }
 

@@ -24,11 +24,13 @@
   </script>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-white text-slate-900 min-h-screen flex flex-col antialiased">
+<body class="bg-white text-slate-900 min-h-screen flex flex-col antialiased overflow-x-hidden w-full">
 
   <button class="projector-exit-btn" onclick="alternarModoProjetor()">Sair do Modo Projetor</button>
 
-  <header class="h-14 bg-white border-b border-slate-200 px-4 flex items-center justify-between sticky top-0 z-40">
+  <div id="sidebarOverlay" class="fixed inset-0 bg-slate-900/40 z-40 hidden md:hidden" onclick="closeSidebarMobile()"></div>
+
+  <header class="h-14 bg-white border-b border-slate-200 px-4 flex items-center justify-between sticky top-0 z-30">
     <div class="flex items-center gap-3">
       <button class="px-3 py-1 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-none transition-colors" id="toggleSidebarBtn" onclick="toggleSidebar()">
         Menu
@@ -38,7 +40,7 @@
           src="icr_logo_sem_fundo.png" 
           onerror="this.onerror=null; this.src='icr_logo_maior.png';" 
           alt="Logo ICR Florianópolis" 
-          class="h-9 w-auto object-contain"
+          class="h-8 sm:h-9 w-auto object-contain"
         >
         <div class="flex flex-col">
           <span class="text-sm font-extrabold text-icr leading-tight tracking-tight">Coletânea de Louvores</span>
@@ -46,15 +48,11 @@
         </div>
       </a>
     </div>
-
-    <div class="flex items-center gap-2">
-      <span class="text-xs font-bold text-icr bg-icr-light border border-icr-border px-2.5 py-1 rounded-none" id="totalCounter">0 hinos</span>
-    </div>
   </header>
 
-  <div class="flex flex-1 min-h-[calc(100vh-56px)]">
+  <div class="flex flex-1 min-h-[calc(100vh-56px)] relative w-full">
 
-    <aside class="w-72 sm:w-80 bg-slate-50 border-r border-slate-200 flex flex-col shrink-0 transition-all duration-200" id="sidebar">
+    <aside class="fixed top-[56px] bottom-0 left-0 z-50 w-72 bg-slate-50 border-r border-slate-200 flex flex-col -translate-x-full transition-transform duration-200 shadow-xl md:static md:translate-x-0 md:w-80 md:shadow-none md:z-auto shrink-0" id="sidebar">
       <div class="p-3 border-b border-slate-200 flex flex-col gap-2.5 bg-slate-50">
         <div class="flex items-center justify-between">
           <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">Repertório</span>
@@ -84,11 +82,11 @@
       </div>
     </aside>
 
-    <main class="flex-1 p-4 sm:p-8 max-w-4xl mx-auto w-full">
+    <main class="flex-1 p-4 sm:p-8 max-w-4xl mx-auto w-full min-w-0">
       <div id="conteudoHino">
         <div class="flex flex-col items-center justify-center min-h-[360px] text-center p-8 border border-slate-200 bg-slate-50 rounded-none">
           <h2 class="text-lg font-bold text-slate-800 mb-1">Coletânea ICR Florianópolis</h2>
-          <p class="text-xs text-slate-600 max-w-md">Selecione um louvor na lista ao lado ou busque por número ou título para visualizar a letra e cifras.</p>
+          <p class="text-xs text-slate-600 max-w-md">Selecione um louvor no menu lateral para visualizar a letra e cifras.</p>
         </div>
       </div>
     </main>
@@ -110,8 +108,6 @@
         const res = await fetch('/api/hinos');
         if (!res.ok) throw new Error('Erro ao carregar hinos');
         hinosData = await res.json();
-        
-        atualizarContador();
         renderizarLista();
 
         if (hinosData.length > 0) {
@@ -122,11 +118,6 @@
       } catch (err) {
         console.error('Erro ao carregar dados:', err);
       }
-    }
-
-    function atualizarContador() {
-      const el = document.getElementById('totalCounter');
-      el.textContent = `${hinosData.length} ${hinosData.length === 1 ? 'louvor' : 'louvores'}`;
     }
 
     function renderizarLista() {
@@ -178,10 +169,7 @@
       window.location.hash = id;
       renderizarLista();
       exibirHino(id);
-
-      if (window.innerWidth <= 768) {
-        document.getElementById('sidebar').classList.add('-translate-x-full');
-      }
+      closeSidebarMobile();
     }
 
     function exibirHino(id) {
@@ -193,7 +181,7 @@
 
       const container = document.getElementById('conteudoHino');
       container.innerHTML = `
-        <article class="bg-white">
+        <article class="bg-white w-full">
           <header class="mb-4 pb-3 border-b-2 border-icr">
             <div class="flex items-center gap-2 mb-1.5">
               <span class="font-mono text-xs font-bold text-icr bg-icr-light border border-icr-border px-1.5 py-0.5">#${numFormatado}</span>
@@ -207,23 +195,23 @@
             ` : ''}
           </header>
 
-          <div class="flex flex-wrap items-center gap-2 py-2 px-3 bg-slate-50 border border-slate-200 mb-6 text-xs font-bold text-slate-700">
-            <div class="flex items-center gap-1">
+          <div class="flex items-center gap-2 overflow-x-auto whitespace-nowrap py-2 px-3 bg-slate-50 border border-slate-200 mb-6 text-xs font-bold text-slate-700 no-scrollbar">
+            <div class="inline-flex items-center gap-1 shrink-0">
               <button class="px-2 py-1 bg-white border border-slate-300 hover:border-icr hover:text-icr transition-colors" onclick="alterarTamanhoFonte(-10)">A-</button>
               <span class="font-mono px-1 min-w-[36px] text-center" id="fontSizeLabel">${tamanhoFontePercent}%</span>
               <button class="px-2 py-1 bg-white border border-slate-300 hover:border-icr hover:text-icr transition-colors" onclick="alterarTamanhoFonte(10)">A+</button>
               <button class="px-2 py-1 bg-white border border-slate-300 hover:border-icr hover:text-icr transition-colors" onclick="resetarTamanhoFonte()">Reset</button>
             </div>
 
-            <span class="text-slate-300">|</span>
+            <span class="text-slate-300 shrink-0">|</span>
 
-            <button class="px-2.5 py-1 ${exibirCifras ? 'bg-icr text-white border-icr' : 'bg-white text-slate-700 border-slate-300'} border hover:opacity-90 transition-all" onclick="alternarExibicaoCifras()">
+            <button class="shrink-0 px-2.5 py-1 ${exibirCifras ? 'bg-icr text-white border-icr' : 'bg-white text-slate-700 border-slate-300'} border hover:opacity-90 transition-all" onclick="alternarExibicaoCifras()">
               ${exibirCifras ? 'Cifras: ON' : 'Somente Letra'}
             </button>
 
-            <span class="text-slate-300">|</span>
+            <span class="text-slate-300 shrink-0">|</span>
 
-            <div class="flex items-center gap-1">
+            <div class="inline-flex items-center gap-1 shrink-0">
               <button class="px-2.5 py-1 ${autoscrollAtivo ? 'bg-icr text-white border-icr' : 'bg-white text-slate-700 border-slate-300'} border hover:opacity-90 transition-all" onclick="alternarAutoScroll()">
                 ${autoscrollAtivo ? 'Rolagem: ON' : 'Auto-scroll'}
               </button>
@@ -234,17 +222,17 @@
               </select>
             </div>
 
-            <span class="text-slate-300">|</span>
+            <span class="text-slate-300 shrink-0">|</span>
 
-            <button class="px-2.5 py-1 bg-white border border-slate-300 hover:border-icr hover:text-icr transition-colors" onclick="alternarModoProjetor()">
+            <button class="shrink-0 px-2.5 py-1 bg-white border border-slate-300 hover:border-icr hover:text-icr transition-colors" onclick="alternarModoProjetor()">
               Modo Projetor
             </button>
-            <button class="px-2.5 py-1 bg-white border border-slate-300 hover:border-icr hover:text-icr transition-colors" onclick="copiarLetra()">
+            <button class="shrink-0 px-2.5 py-1 bg-white border border-slate-300 hover:border-icr hover:text-icr transition-colors" onclick="copiarLetra()">
               Copiar
             </button>
           </div>
 
-          <div class="py-2">
+          <div class="py-2 w-full overflow-x-auto">
             <pre class="lyric-content" id="lyricContent">${formatarLetraECifra(hino.letra)}</pre>
           </div>
         </article>
@@ -423,10 +411,31 @@
 
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
-      if (window.innerWidth <= 768) {
-        sidebar.classList.toggle('-translate-x-full');
+      const overlay = document.getElementById('sidebarOverlay');
+
+      if (window.innerWidth < 768) {
+        const isClosed = sidebar.classList.contains('-translate-x-full');
+        if (isClosed) {
+          sidebar.classList.remove('-translate-x-full');
+          sidebar.classList.add('translate-x-0');
+          overlay.classList.remove('hidden');
+        } else {
+          sidebar.classList.add('-translate-x-full');
+          sidebar.classList.remove('translate-x-0');
+          overlay.classList.add('hidden');
+        }
       } else {
-        sidebar.classList.toggle('hidden');
+        sidebar.classList.toggle('md:hidden');
+      }
+    }
+
+    function closeSidebarMobile() {
+      if (window.innerWidth < 768) {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        sidebar.classList.add('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+        overlay.classList.add('hidden');
       }
     }
 
