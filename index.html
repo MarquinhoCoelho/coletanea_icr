@@ -7,10 +7,13 @@
   <link rel="icon" type="image/png" href="icr_logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+  <!-- BOTAO PARA SAIR DO MODO PROJETOR -->
+  <button class="projector-exit-btn" onclick="alternarModoProjetor()">✕ Sair do Modo Projetor</button>
 
   <!-- CABEÇALHO DO SITE (HEADER) -->
   <header class="site-header">
@@ -18,21 +21,30 @@
       <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()" aria-label="Abrir Menu">
         Menu ☰
       </button>
-      <img src="icr_logo_maior.png" alt="Logo ICR Florianópolis" class="brand-logo">
-      <div class="brand-title-wrap">
-        <span class="brand-title">Coletânea de Louvores</span>
-        <span class="brand-subtitle">ICR Florianópolis</span>
-      </div>
+      <a href="#" class="brand-logo-link" onclick="location.reload(); return false;">
+        <!-- Tenta carregar icr_logo_sem_fundo.png e faz fallback para icr_logo_maior.png -->
+        <img 
+          src="icr_logo_sem_fundo.png" 
+          onerror="this.onerror=null; this.src='icr_logo_maior.png';" 
+          alt="Logo ICR Florianópolis" 
+          class="brand-logo"
+        >
+        <div class="brand-text-block">
+          <span class="brand-title">Coletânea de Louvores</span>
+          <span class="brand-subtitle">ICR Florianópolis</span>
+        </div>
+      </a>
     </div>
 
     <!-- CAMPO DE BUSCA CENTRALIZADO -->
     <div class="search-section">
       <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
         <input 
           type="text" 
           id="searchInput" 
           class="search-input" 
-          placeholder="Buscar por número ou título do hino..." 
+          placeholder="Buscar por nº ou título do hino..." 
           oninput="filtrarHinos()" 
           autocomplete="off"
         >
@@ -41,17 +53,19 @@
     </div>
 
     <div class="header-right">
-      <span class="badge-counter" id="totalCounter">0 hinos</span>
+      <span class="repertoire-badge" id="totalCounter">0 hinos</span>
     </div>
   </header>
 
   <!-- ESTRUTURA DE LAYOUT PRINCIPAL -->
   <div class="app-layout">
 
-    <!-- BARRA LATERAL DE NAVEGAÇÃO -->
+    <!-- BARRA LATERAL DE NAVEGAÇÃO (REPERTÓRIO) -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <span class="sidebar-title">Repertório</span>
+        <div class="sidebar-title-group">
+          <span class="sidebar-title">Repertório</span>
+        </div>
         <button class="sort-btn" id="sortBtn" onclick="alternarOrdenacao()" title="Alternar Ordenação">
           Ordem: Nº
         </button>
@@ -68,8 +82,9 @@
     <main class="main-content">
       <div id="conteudoHino">
         <div class="empty-state">
+          <div class="empty-state-icon">🎶</div>
           <h2>Coletânea ICR Florianópolis</h2>
-          <p>Selecione um hino na lista lateral ou utilize o campo de busca acima para visualizar a letra e cifras.</p>
+          <p>Selecione um louvor na lista ao lado ou digite o número/título na busca acima para visualizar a letra e cifras.</p>
         </div>
       </div>
     </main>
@@ -77,7 +92,7 @@
   </div>
 
   <script>
-    // Estado Global da Aplicação
+    // Estado da Aplicação
     let hinosData = [];
     let hinoAtualId = null;
     let ordemAlfabetica = false;
@@ -87,17 +102,16 @@
     let autoscrollTimer = null;
     let autoscrollVelocidade = 1;
 
-    // Inicialização ao carregar a página
+    // Carrega a lista de hinos via API
     async function carregarHinos() {
       try {
         const res = await fetch('/api/hinos');
-        if (!res.ok) throw new Error('Falha ao carregar lista de hinos');
+        if (!res.ok) throw new Error('Erro ao carregar hinos');
         hinosData = await res.json();
         
         atualizarContador();
         renderizarLista();
 
-        // Se houver hinos, carrega o primeiro por padrão ou verifica URL hash
         if (hinosData.length > 0) {
           const hashId = parseInt(window.location.hash.replace('#', ''));
           const itemInicial = hinosData.find(h => h.id === hashId) || hinosData[0];
@@ -108,19 +122,16 @@
       }
     }
 
-    // Atualiza contador de hinos no cabeçalho
     function atualizarContador() {
       const el = document.getElementById('totalCounter');
-      el.textContent = `${hinosData.length} ${hinosData.length === 1 ? 'hino' : 'hinos'}`;
+      el.textContent = `${hinosData.length} ${hinosData.length === 1 ? 'louvor' : 'louvores'}`;
     }
 
-    // Renderiza a lista lateral com suporte a filtro e ordenação
     function renderizarLista() {
       const termo = document.getElementById('searchInput').value.trim().toLowerCase();
       const listaEl = document.getElementById('listaHinos');
       const noResultsEl = document.getElementById('noResults');
 
-      // Filtragem por título ou número
       let filtrados = hinosData.filter(hino => {
         const numStr = String(hino.id);
         const numPad = String(hino.id).padStart(2, '0');
@@ -128,7 +139,6 @@
         return tituloLower.includes(termo) || numStr === termo || numPad === termo;
       });
 
-      // Ordenação
       if (ordemAlfabetica) {
         filtrados.sort((a, b) => a.titulo.localeCompare(b.titulo));
       } else {
@@ -154,27 +164,24 @@
           <a href="#${hino.id}" class="song-link" onclick="selecionarHino(${hino.id}); return false;">
             <span class="song-number">${numFormatado}</span>
             <span class="song-title-text">${escaparHTML(hino.titulo)}</span>
+            ${hino.observacao ? `<span class="song-obs-dot" title="${escaparHTML(hino.observacao)}"></span>` : ''}
           </a>
         `;
         listaEl.appendChild(li);
       });
     }
 
-    // Função ao clicar em um hino da lista
     function selecionarHino(id) {
       hinoAtualId = id;
       window.location.hash = id;
       renderizarLista();
       exibirHino(id);
 
-      // Fecha o menu lateral no celular após selecionar
       if (window.innerWidth <= 768) {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.remove('open');
+        document.getElementById('sidebar').classList.remove('open');
       }
     }
 
-    // Exibe o conteúdo detalhado do hino com toolbar estilo Cifra Club
     function exibirHino(id) {
       const hino = hinosData.find(h => h.id === id);
       if (!hino) return;
@@ -187,8 +194,8 @@
         <article class="hino-card">
           <header class="hino-header">
             <div class="hino-meta-top">
-              <span class="hino-num-tag">Hino #${numFormatado}</span>
-              ${hino.tom ? `<span class="hino-tom-tag">Tom: ${escaparHTML(hino.tom)}</span>` : ''}
+              <span class="hino-num-tag">#${numFormatado}</span>
+              ${hino.tom ? `<span class="hino-tom-badge">Tom: ${escaparHTML(hino.tom)}</span>` : ''}
             </div>
             <h1 class="hino-title">${escaparHTML(hino.titulo)}</h1>
             ${hino.observacao ? `
@@ -198,61 +205,64 @@
             ` : ''}
           </header>
 
-          <!-- BARRA DE RECURSOS (CIFRA CLUB) -->
+          <!-- BARRA DE RECURSOS (ESTILO CIFRA CLUB PREMIUM) -->
           <div class="cifra-toolbar">
             
-            <!-- Grupo: Tamanho da Fonte -->
+            <!-- Grupo 1: Controles de Fonte -->
             <div class="toolbar-group">
-              <span class="toolbar-label">Fonte</span>
               <button class="btn-tool" onclick="alterarTamanhoFonte(-10)" title="Diminuir fonte">A-</button>
               <span class="font-size-indicator" id="fontSizeLabel">${tamanhoFontePercent}%</span>
               <button class="btn-tool" onclick="alterarTamanhoFonte(10)" title="Aumentar fonte">A+</button>
-              <button class="btn-tool" onclick="resetarTamanhoFonte()" title="Resetar tamanho">Reset</button>
+              <button class="btn-tool" onclick="resetarTamanhoFonte()" title="Tamanho padrão">Reset</button>
             </div>
 
-            <!-- Grupo: Exibição Cifras -->
+            <div class="toolbar-divider"></div>
+
+            <!-- Grupo 2: Visibilidade de Cifras -->
             <div class="toolbar-group">
               <button class="btn-tool ${exibirCifras ? 'active' : ''}" id="btnToggleCifras" onclick="alternarExibicaoCifras()">
                 ${exibirCifras ? 'Cifras: ON' : 'Somente Letra'}
               </button>
             </div>
 
-            <!-- Grupo: Auto-scroll -->
-            <div class="toolbar-group autoscroll-control">
+            <div class="toolbar-divider"></div>
+
+            <!-- Grupo 3: Auto Scroll -->
+            <div class="toolbar-group">
               <button class="btn-tool ${autoscrollAtivo ? 'active' : ''}" id="btnAutoScroll" onclick="alternarAutoScroll()">
                 ${autoscrollAtivo ? 'Rolagem: ON ⏸' : 'Rolagem 🚀'}
               </button>
               <select class="speed-select" id="speedSelect" onchange="mudarVelocidadeAutoScroll(this.value)" title="Velocidade de rolagem">
                 <option value="1" ${autoscrollVelocidade == 1 ? 'selected' : ''}>1x</option>
+                <option value="1.5" ${autoscrollVelocidade == 1.5 ? 'selected' : ''}>1.5x</option>
                 <option value="2" ${autoscrollVelocidade == 2 ? 'selected' : ''}>2x</option>
-                <option value="3" ${autoscrollVelocidade == 3 ? 'selected' : ''}>3x</option>
               </select>
             </div>
 
-            <!-- Grupo: Modo Projetor & Utilitários -->
+            <div class="toolbar-divider"></div>
+
+            <!-- Grupo 4: Utilitários -->
             <div class="toolbar-group">
-              <button class="btn-tool" onclick="alternarModoProjetor()" title="Alternar Modo Projetor / Leitura Limpa">
-                Modo Projetor 🖥️
+              <button class="btn-tool" onclick="alternarModoProjetor()" title="Modo de Leitura / Projetor">
+                Projetor 🖥️
               </button>
-              <button class="btn-tool" onclick="copiarLetra()" title="Copiar letra para a área de transferência">
-                Copiar Letra
+              <button class="btn-tool" onclick="copiarLetra()" title="Copiar letra">
+                Copiar
               </button>
             </div>
 
           </div>
 
-          <!-- ÁREA DE EXIBIÇÃO DA LETRA / CIFRA -->
+          <!-- LETRA E CIFRAS -->
           <div class="lyric-container">
-            <pre class="lyric-content" id="lyricContent" style="font-size: calc(1.1rem * ${tamanhoFontePercent / 100});">${formatarLetraECifra(hino.letra)}</pre>
+            <pre class="lyric-content" id="lyricContent" style="font-size: calc(1.05rem * ${tamanhoFontePercent / 100});">${formatarLetraECifra(hino.letra)}</pre>
           </div>
         </article>
       `;
 
-      // Atualiza estado visual na lista lateral
       renderizarLista();
     }
 
-    // Formata o texto do hino identificando cifras, seções ([Intro], [Refrão], etc.) e tom
     function formatarLetraECifra(texto) {
       if (!texto) return '';
 
@@ -262,26 +272,22 @@
       for (let i = 0; i < linhas.length; i++) {
         let linha = linhas[i];
 
-        // Ocultar linha de tom duplicada no topo se já exibida no header
         if (linha.startsWith('[Tom:')) {
           continue;
         }
 
-        // Seção em colchetes: [Intro], [Primeira Parte], [Refrão], etc.
         if (/^\s*\[.+\]\s*$/.test(linha)) {
           const nomeSecao = linha.replace(/\[|\]/g, '').trim();
           resultadoHtml.push(`<span class="song-section-header">${escaparHTML(nomeSecao)}</span>`);
           continue;
         }
 
-        // Se o usuário optou por ocultar cifras, verifica se a linha é predominantemente de cifras
         if (!exibirCifras) {
           if (ehLinhaDeCifra(linha)) {
-            continue; // Pula a linha de cifra
+            continue;
           }
         }
 
-        // Se for linha de cifra, formata os acordes
         if (ehLinhaDeCifra(linha)) {
           resultadoHtml.push(`<span class="chord-line">${destacarAcordesNaLinha(linha)}</span>`);
         } else {
@@ -292,11 +298,8 @@
       return resultadoHtml.join('\n');
     }
 
-    // Verifica se uma linha contém principalmente cifras musicais
     function ehLinhaDeCifra(linha) {
       if (!linha || linha.trim().length === 0) return false;
-      
-      // Tokens típicos de cifras: A, B, C, D, E, F, G com variações (#, b, m, maj7, /F#, 7, sus4, etc.)
       const palavras = linha.trim().split(/\s+/);
       const padraoCifra = /^[A-G]([#b])?(m|maj|min|dim|aug|sus[24]?)?([0-9])?(\/[A-G][#b]?)?$/;
 
@@ -306,23 +309,17 @@
           contagemCifras++;
         }
       }
-
-      // Se mais de 50% dos tokens forem cifras, trata a linha inteira como linha de cifra
       return (contagemCifras / palavras.length) >= 0.5;
     }
 
-    // Aplica destaque visual em cada acorde da linha
     function destacarAcordesNaLinha(linha) {
       const padraoCifra = /\b[A-G](?:[#b])?(?:m|maj|min|dim|aug|sus[24]?)?(?:[0-9])?(?:\/[A-G][#b]?)?\b/g;
-      
-      // Substitui acordes por spans formatados com segurança contra XSS
       const linhaEscapada = escaparHTML(linha);
       return linhaEscapada.replace(padraoCifra, (match) => {
         return `<span class="chord">${match}</span>`;
       });
     }
 
-    // Controle de Tamanho da Fonte (A- / A+)
     function alterarTamanhoFonte(delta) {
       tamanhoFontePercent = Math.max(70, Math.min(200, tamanhoFontePercent + delta));
       aplicarTamanhoFonte();
@@ -336,16 +333,14 @@
     function aplicarTamanhoFonte() {
       const lyricContent = document.getElementById('lyricContent');
       const fontSizeLabel = document.getElementById('fontSizeLabel');
-      
       if (lyricContent) {
-        lyricContent.style.fontSize = `calc(1.1rem * ${tamanhoFontePercent / 100})`;
+        lyricContent.style.fontSize = `calc(1.05rem * ${tamanhoFontePercent / 100})`;
       }
       if (fontSizeLabel) {
         fontSizeLabel.textContent = `${tamanhoFontePercent}%`;
       }
     }
 
-    // Alternar Exibição de Cifras (ON / Somente Letra)
     function alternarExibicaoCifras() {
       exibirCifras = !exibirCifras;
       if (hinoAtualId !== null) {
@@ -353,7 +348,6 @@
       }
     }
 
-    // Recursos de Auto-scroll
     function alternarAutoScroll() {
       autoscrollAtivo = !autoscrollAtivo;
       const btn = document.getElementById('btnAutoScroll');
@@ -370,7 +364,7 @@
     }
 
     function mudarVelocidadeAutoScroll(val) {
-      autoscrollVelocidade = parseInt(val) || 1;
+      autoscrollVelocidade = parseFloat(val) || 1;
       if (autoscrollAtivo) {
         pararAutoScroll();
         iniciarAutoScroll();
@@ -379,10 +373,9 @@
 
     function iniciarAutoScroll() {
       pararAutoScroll();
-      const intervaloMs = Math.max(10, 40 / autoscrollVelocidade);
+      const intervaloMs = Math.max(10, 35 / autoscrollVelocidade);
       autoscrollTimer = setInterval(() => {
         window.scrollBy({ top: 1, behavior: 'smooth' });
-        // Se chegou ao final da página, desativa o auto-scroll
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 5) {
           alternarAutoScroll();
         }
@@ -396,43 +389,32 @@
       }
     }
 
-    // Modo Projetor / Leitura Limpa
     function alternarModoProjetor() {
       document.body.classList.toggle('projector-mode');
     }
 
-    // Copiar letra para a área de transferência
     async function copiarLetra() {
       const hino = hinosData.find(h => h.id === hinoAtualId);
       if (!hino) return;
 
       try {
         await navigator.clipboard.writeText(`${hino.titulo}\n\n${hino.letra}`);
-        alert('Letra copiada para a área de transferência!');
+        alert('Letra copiada com sucesso!');
       } catch (err) {
         console.error('Erro ao copiar:', err);
       }
     }
 
-    // Alternar ordenação da lista lateral (Por Número x Por Título)
     function alternarOrdenacao() {
       ordemAlfabetica = !ordemAlfabetica;
-      const sortBtn = document.getElementById('sortBtn');
-      sortBtn.textContent = ordemAlfabetica ? 'Ordem: A-Z' : 'Ordem: Nº';
+      document.getElementById('sortBtn').textContent = ordemAlfabetica ? 'Ordem: A-Z' : 'Ordem: Nº';
       renderizarLista();
     }
 
-    // Função de Busca e Filtro
     function filtrarHinos() {
       const val = document.getElementById('searchInput').value;
       const clearBtn = document.getElementById('searchClearBtn');
-      
-      if (val.trim().length > 0) {
-        clearBtn.classList.add('active');
-      } else {
-        clearBtn.classList.remove('active');
-      }
-
+      clearBtn.classList.toggle('active', val.trim().length > 0);
       renderizarLista();
     }
 
@@ -444,13 +426,10 @@
       input.focus();
     }
 
-    // Menu lateral mobile
     function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('open');
+      document.getElementById('sidebar').classList.toggle('open');
     }
 
-    // Auxiliar: Escapar HTML contra vulnerabilidades XSS
     function escaparHTML(str) {
       if (!str) return '';
       return str
@@ -461,7 +440,6 @@
         .replace(/'/g, '&#039;');
     }
 
-    // Inicializa ao carregar a página
     window.addEventListener('DOMContentLoaded', carregarHinos);
   </script>
 </body>
