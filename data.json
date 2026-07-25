@@ -2,22 +2,109 @@
   {
     "id": 1,
     "titulo": "Tua Voz, Senhor",
-    "tom": "G",
     "observacao": "Ensaiar do zero",
-    "letra": "[Tom: G]\n\n[Intro] G  D/F#  Em  C\n\n[Primeira Parte]\n   G        D/F#\nTua voz, Senhor, soou no meu coração\n   Em       C\nTrouxe paz e luz à minha escuridão\n   G        D/F#\nMesmo no deserto posso Te ouvir\n   Em       C\nTeu amor me guia, ajuda a prosseguir\n\n[Refrão]\n        G       D\nFala comigo, vem me ensinar\n          Em          C\nQuero a Tua presença neste lugar\n        G       D\nTua Palavra é lâmpada para os meus pés\n       Em          C    G\nE luz para o meu caminho, Tu és fiel"
+    "letra": "Tua voz, Senhor, soou no meu coração\nTrouxe paz e luz à minha escuridão\nMesmo no deserto posso Te ouvir\nTeu amor me guia, ajuda a prosseguir\n\nFala comigo, vem me ensinar\nQuero a Tua presença neste lugar\nTua Palavra é lâmpada para os meus pés\nE luz para o meu caminho, Tu és fiel"
   },
   {
     "id": 2,
     "titulo": "Firme nas Promessas",
-    "tom": "A",
     "observacao": "Precisa repassar",
-    "letra": "[Tom: A]\n\n[Primeira Parte]\nA           D     A\nFirme nas promessas do meu Salvador\nA           E\nCantarei louvores ao meu Redentor\nA           D     A\nFirme no Teu amor que não mudará\n   A     E    A\nPra sempre o Teu nome reinará\n\n[Refrão]\n  A     D\nFirme, firme\n  E           A\nFirme nas promessas de Jesus, meu Mestre\n  A     D\nFirme, firme\n  A     E     A\nFirme nas promessas de Deus"
+    "letra": "Firme nas promessas do meu Salvador\nCantarei louvores ao meu Redentor\nFirme no Teu amor que não mudará\nPra sempre o Teu nome reinará\n\nFirme, firme\nFirme nas promessas de Jesus, meu Mestre\nFirme, firme\nFirme nas promessas de Deus"
   },
   {
     "id": 3,
-    "titulo": "Eu Não Preciso Ser Reconhecido",
-    "tom": "C",
+    "titulo": "Eu Não Preciso Ser Reconhecido Por Ninguém",
     "observacao": "A tua graça me basta - Precisa ensaiar",
-    "letra": "[Tom: C]\n\n[Primeira Parte]\nC           G\nEu não preciso ser reconhecido por ninguém\nAm          F\nA Tua graça me basta, a Tua glória me sustém\nC           G\nO meu desejo é Te adorar com todo o meu ser\nAm          F\nE diminuir para que Tu possas crescer\n\n[Refrão]\n    C        G\nSe Tu cresceres, eu diminuir\n    Am       F\nQue o Teu nome sobressaia aqui\n        C        G\nToda a glória e honra pertencem a Ti\n      Am       F      C\nPra sempre, pra sempre, amém"
+    "letra": "Eu não preciso ser reconhecido por ninguém\nA Tua graça me basta, a Tua glória me sustém\nO meu desejo é Te adorar com todo o meu ser\nE diminuir para que Tu possas crescer\n\nSe Tu cresceres, eu diminuir\nQue o Teu nome sobressaia aqui\nToda a glória e honra pertencem a Ti\nPra sempre, pra sempre, amém"
+  },
+  {
+    "id": 4,
+    "titulo": "Eu Me Rendo (A Ti Eu Vou Clamar)",
+    "letra": "A Ti eu vou clamar\nPois sei que és fiel\nÉs o meu socorro\nMeu Deus Emanuel\n\nEu me rendo, me prostro aos Teus pés\nReconheço que Tu és meu Senhor\nEu me rendo, me entrego a Ti\nTua graça me alcançou"
+  },
+  {
+    "id": 5,
+    "titulo": "Fiel a Mim",
+    "letra": "Sei que os Teus olhos olham para mim\nSei que os Teus ouvidos estão atentos ao meu clamar\nSei que o Teu coração chora por mim\nQuando em meio às lutas não consigo Te adorar\n\nSei que não me deixas só no meu caminhar\nTu és meu Amigo, meu refúgio e meu lar\n\nDeus, Tu és fiel a mim\nMesmo quando eu não sou fiel a Ti\nTua misericórdia renova minhas forças\nE me faz recomeçar até ao fim"
+  },
+  {
+    "id": 6,
+    "titulo": "Alfa e Ômega (Tu Que Estás Assentado)",
+    "letra": "Tu que estás assentado no trono\nSempre reinando, Senhor\nExaltado nos céus e na terra\nÉs o meu Salvador\n\nAlfa e Ômega, Início e Fim\nAquele que é, que era e que há de vir\nAlfa e Ômega, Santo e Fiel\nPara sempre Teu é o reino nos céus"
+  },
+  {
+    "id": 7,
+    "titulo": "Estamos de Pé",
+    "letra": "O inimigo até tentou nos parar\nLevantou muralhas para nos cercar\nMas a voz do Senhor ressoou sobre nós\nE o Teu Espírito renovou a nossa voz\n\nEstamos de pé, não vamos recuar\nNa força do Senhor nós vamos marchar\nSua glória nos cobre, Seu braço nos sustenta\nA Igreja de Cristo se levanta e enfrenta"
+  },
+  {
+    "id": 8,
+    "titulo": "Seja o Centro",
+    "letra": "Seja o centro, seja a minha luz\nSeja a minha esperança, Jesus\nSeja a minha vida, seja a minha canção\nSeja o desejo do meu coração\n\nSeja o centro, Jesus, no meu caminhar\nNo meu pensamento, em todo lugar\nTudo o que eu sou pertence a Ti\nBrilha a Tua glória através de mim"
+  },
+  {
+    "id": 9,
+    "titulo": "Diante da Cruz",
+    "letra": "Ó Deus, Tu és o meu Deus forte\nA minha rocha e minha salvação\nTrouxeste vida onde havia morte\nE restauraste o meu coração\n\nDiante da cruz eu me me ajoelho\nAgradecido pelo Teu amor\nTeu sangue puro me purificou\nHoje eu sou livre, meu Redentor"
+  },
+  {
+    "id": 10,
+    "titulo": "O Filho do Homem",
+    "letra": "O Filho do Homem veio buscar e salvar\nAquele que perdido se encontrava\nSua vida na cruz Ele entregou\nE a dívida do pecado cancelou\n\nEle ressurgiu, a morte venceu\nE deu o Seu Espírito a todo o que crer\nAo Rei dos reis toda a glória e louvor\nPra sempre amém, Cristo é o Senhor"
+  },
+  {
+    "id": 11,
+    "titulo": "Esperança (Doce Presença)",
+    "letra": "Doce presença, Espírito Santo\nVem sobre mim com Teu óleo e Teu manto\nRenova a esperança no meu coração\nTira todo o medo e a aflição\n\nSinto a Tua paz a me envolver\nTu és a força do meu viver\nPermaneces fiel, não me deixas cair\nEm Tua presença eu quero prosseguir"
+  },
+  {
+    "id": 12,
+    "titulo": "Preciso de Ti",
+    "letra": "Preciso de Ti, preciso de Ti\nComo a terra seca precisa da chuva\nPreciso de Ti, preciso de Ti\nMais do que o ar que eu respiro\n\nSem a Tua presença não posso viver\nSem a Tua graça nada posso fazer\nVem com Teu fogo, purifica o meu ser\nSenhor, eu preciso de Ti"
+  },
+  {
+    "id": 13,
+    "titulo": "Dá-me um Coração Igual ao Teu",
+    "letra": "Dá-me um coração igual ao Teu, meu Mestre\nDá-me um coração igual ao Teu\nCoração disposto a obedecer\nCumprir o Teu querer\nDá-me um coração igual ao Teu\n\nCoração que ama, coração que perdoa\nCoração que busca a Tua paz a cada hora\nQue se compadece do irmão na dor\nDá-me um coração igual ao Teu, Senhor"
+  },
+  {
+    "id": 14,
+    "titulo": "Quem É Esse?",
+    "letra": "Quem é esse?\nQue era sem pecado e não me condenou\nNo lugar da morte, vida me ofertou\nO Cordeiro que por mim se entregou\nE os meus pecados levou\n\nEle é Jesus, o Rei da glória\nEle venceu e nos deu a vitória\nSua graça me alcançou, Seu amor me resgatou\nQuem é esse? É o meu Senhor"
+  },
+  {
+    "id": 15,
+    "titulo": "Oh Pai, Eu Queria Tanto Ver",
+    "letra": "Oh Pai, eu queria tanto ver\nO Teu agir, o Teu mover\nRenova em mim a fé que salva e cura\nGuia meus passos em Tua luz pura\n\nTu és o Autor da minha fé\nA Rocha firme que me mantém de pé\nMesmo nas tempestades Te adora meu ser\nOh Pai, cumpre em mim o Teu querer"
+  },
+  {
+    "id": 16,
+    "titulo": "Tu És Soberano",
+    "letra": "Tu és soberano sobre a terra\nTu és soberano sobre os céus\nTu és Senhor absoluto\nTudo obedece ao Teu mandar\n\nTu és soberano, és o Rei dos reis\nTeu trono permanece para sempre\nToda a criação declara a Tua glória\nE o Teu povo canta a Tua vitória"
+  },
+  {
+    "id": 17,
+    "titulo": "Da Vida o Melhor",
+    "letra": "Da vida o melhor é estar em Tua presença\nSentir o Teu amor e a Tua benevolência\nAprender de Ti a cada novo dia\nE caminhar na Tua luz e alegria\n\nNada se compara ao Teu grande amor\nÉs o meu tesouro, meu Consolador\nContigo eu tenho paz e salvação\nTu és a herança do meu coração"
+  },
+  {
+    "id": 18,
+    "titulo": "Meu Pastor (Contigo Eu Ando em Segurança)",
+    "letra": "O Senhor é o meu Pastor e nada me faltará\nEm verdes pastos Ele me faz deitar\nGuiando-me suavemente junto às águas puras\nRestaurando a minha alma com doçura\n\nContigo eu ando em segurança, Senhor\nNão temerei mal algum, pois és meu Protetor\nTua vara e Teu cajado me consolam e guiam\nNa Tua casa habitarei todos os dias"
+  },
+  {
+    "id": 19,
+    "titulo": "O Quão Lindo Esse Nome É",
+    "letra": "No princípio eras a Palavra\nUm com Deus, o Altíssimo\nO mistério de Sua glória\nEm Cristo se revelou\n\nO quão lindo esse nome é\nO quão lindo esse nome é\nO nome de Jesus, meu Rei\nO quão lindo esse nome é\nOutro nome igual não há\nO quão lindo esse nome é\nO nome de Jesus"
+  },
+  {
+    "id": 20,
+    "titulo": "Oferta Agradável a Ti",
+    "letra": "A Tua palavra escondi\nNo meu coração para não pecar contra Ti\nSenhor, meu desejo é Te agradar\nCom a minha vida Te adorar\n\nFaça de mim uma oferta agradável a Ti\nUm sacrifício vivo no Teu altar\nQue a minha adoração chegue como um cheiro suave\nE o Teu Santo Espírito venha me renovar"
+  },
+  {
+    "id": 21,
+    "titulo": "Jeová Jireh",
+    "letra": "O meu Deus é o Deus do impossível\nEle abre caminhos no meio do mar\nJeová Jireh, o Deus da provisão\nNada me faltará, Ele tem a solução\n\nJeová Jireh, meu Provedor\nSua graça me basta, meu Salvador\nEm Suas promessas eu vou confiar\nO Deus de milagres não falhará"
   }
 ]
