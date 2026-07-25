@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bíblia Sagrada - ICR Florianópolis</title>
+  <link rel="icon" type="image/png" href="icr_logo.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f6856">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['Roboto Mono', 'monospace']
+          },
+          colors: {
+            icr: {
+              DEFAULT: '#0f6856',
+              dark: '#0a4d3f',
+              light: '#f0f7f5',
+              border: '#c3e2db'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans antialiased">
+
+  <button class="projector-exit-btn" onclick="alternarModoProjetor()">Sair do Modo Projetor</button>
+
+  <header class="h-16 bg-white border-b border-slate-200/80 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shrink-0 shadow-xs">
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="flex items-center gap-2.5 text-decoration-none">
+        <img 
+          src="icr_logo_sem_fundo.png" 
+          onerror="this.onerror=null; this.src='icr_logo_maior.png';" 
+          alt="Logo ICR Florianópolis" 
+          class="h-8 sm:h-9 w-auto object-contain"
+        >
+        <div class="flex flex-col">
+          <span class="text-sm font-extrabold text-icr leading-tight tracking-tight">Bíblia Sagrada</span>
+          <span class="text-[10px] font-semibold text-slate-500 hidden sm:inline">ICR Florianópolis</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <a 
+        href="index.html" 
+        class="px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-all flex items-center gap-1.5"
+      >
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+          <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+        </svg>
+        <span>Louvores</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl w-full mx-auto p-3 sm:p-6 flex flex-col gap-4">
+    
+    <div class="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col gap-3">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <div>
+          <label for="selectVersao" class="block text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">Versão</label>
+          <select id="selectVersao" onchange="trocarVersao()" class="w-full h-9 px-2.5 text-xs font-bold bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-icr focus:ring-2 focus:ring-icr/10 transition-all cursor-pointer">
+            <option value="nvi">NVI (Nova Versão Internacional)</option>
+            <option value="acf">ACF (Almeida Corrigida Fiel)</option>
+            <option value="aa">AA (Almeida Atualizada)</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="selectLivro" class="block text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">Livro</label>
+          <select id="selectLivro" onchange="trocarLivro()" class="w-full h-9 px-2.5 text-xs font-bold bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-icr focus:ring-2 focus:ring-icr/10 transition-all cursor-pointer"></select>
+        </div>
+
+        <div>
+          <label for="selectCapitulo" class="block text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">Capítulo</label>
+          <select id="selectCapitulo" onchange="trocarCapitulo()" class="w-full h-9 px-2.5 text-xs font-bold bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-icr focus:ring-2 focus:ring-icr/10 transition-all cursor-pointer"></select>
+        </div>
+
+        <div>
+          <label for="selectVersiculo" class="block text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">Versículo</label>
+          <select id="selectVersiculo" onchange="trocarVersiculo()" class="w-full h-9 px-2.5 text-xs font-bold bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-icr focus:ring-2 focus:ring-icr/10 transition-all cursor-pointer"></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-8 shadow-sm flex flex-col gap-6">
+      <header class="flex items-center justify-between gap-3 pb-4 border-b border-slate-100 flex-wrap">
+        <div class="flex items-center gap-2">
+          <h1 id="tituloLeitura" class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Carregando...</h1>
+          <span id="badgeVersao" class="text-xs font-bold text-icr bg-emerald-50 border border-emerald-200/60 px-2.5 py-0.5 rounded-full uppercase">NVI</span>
+        </div>
+
+        <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 p-1 rounded-lg">
+          <button onclick="alterarTamanhoFonte(-10)" class="px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-white rounded transition-colors" title="Diminuir fonte">A-</button>
+          <span class="font-mono text-xs font-bold text-slate-600 px-1.5" id="fontSizeLabel">100%</span>
+          <button onclick="alterarTamanhoFonte(10)" class="px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-white rounded transition-colors" title="Aumentar fonte">A+</button>
+          <button onclick="resetarTamanhoFonte()" class="px-2.5 py-1 text-[11px] font-bold text-slate-500 hover:bg-white rounded transition-colors border-l border-slate-200">Reset</button>
+        </div>
+      </header>
+
+      <div id="corpoTexto" class="space-y-3 leading-relaxed text-slate-800 transition-all" style="font-size: 1.05rem;">
+        <div class="p-8 text-center text-xs text-slate-500 font-bold">Carregando textos da Bíblia...</div>
+      </div>
+
+      <footer class="flex items-center justify-between gap-2 pt-4 border-t border-slate-100">
+        <button id="btnCapAnterior" onclick="capituloAnterior()" class="px-3.5 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center gap-1">
+          &larr; Cap. Anterior
+        </button>
+        <button id="btnCapProximo" onclick="proximoCapitulo()" class="px-3.5 py-2 text-xs font-bold text-icr bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/80 rounded-lg transition-colors flex items-center gap-1">
+          Próximo Cap. &rarr;
+        </button>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    const LIVROS_BIBLIA = [
+      { abbrev: "gn", name: "Gênesis", testamento: "AT" },
+      { abbrev: "ex", name: "Êxodo", testamento: "AT" },
+      { abbrev: "lv", name: "Levítico", testamento: "AT" },
+      { abbrev: "num", name: "Números", testamento: "AT" },
+      { abbrev: "dt", name: "Deuteronômio", testamento: "AT" },
+      { abbrev: "jos", name: "Josué", testamento: "AT" },
+      { abbrev: "jz", name: "Juízes", testamento: "AT" },
+      { abbrev: "rt", name: "Rute", testamento: "AT" },
+      { abbrev: "1sm", name: "1 Samuel", testamento: "AT" },
+      { abbrev: "2sm", name: "2 Samuel", testamento: "AT" },
+      { abbrev: "1rs", name: "1 Reis", testamento: "AT" },
+      { abbrev: "2rs", name: "2 Reis", testamento: "AT" },
+      { abbrev: "1cr", name: "1 Crônicas", testamento: "AT" },
+      { abbrev: "2cr", name: "2 Crônicas", testamento: "AT" },
+      { abbrev: "ed", name: "Esdras", testamento: "AT" },
+      { abbrev: "ne", name: "Neemias", testamento: "AT" },
+      { abbrev: "et", name: "Ester", testamento: "AT" },
+      { abbrev: "joh", name: "Jó", testamento: "AT" },
+      { abbrev: "ps", name: "Salmos", testamento: "AT" },
+      { abbrev: "pv", name: "Provérbios", testamento: "AT" },
+      { abbrev: "ec", name: "Eclesiastes", testamento: "AT" },
+      { abbrev: "ct", name: "Cânticos", testamento: "AT" },
+      { abbrev: "is", name: "Isaías", testamento: "AT" },
+      { abbrev: "jr", name: "Jeremias", testamento: "AT" },
+      { abbrev: "lm", name: "Lamentações", testamento: "AT" },
+      { abbrev: "ez", name: "Ezequiel", testamento: "AT" },
+      { abbrev: "dn", name: "Daniel", testamento: "AT" },
+      { abbrev: "os", name: "Oséias", testamento: "AT" },
+      { abbrev: "jl", name: "Joel", testamento: "AT" },
+      { abbrev: "am", name: "Amós", testamento: "AT" },
+      { abbrev: "ob", name: "Obadias", testamento: "AT" },
+      { abbrev: "jn", name: "Jonas", testamento: "AT" },
+      { abbrev: "mq", name: "Miquéias", testamento: "AT" },
+      { abbrev: "na", name: "Naum", testamento: "AT" },
+      { abbrev: "hc", name: "Habacuque", testamento: "AT" },
+      { abbrev: "sf", name: "Sofonias", testamento: "AT" },
+      { abbrev: "ag", name: "Ageu", testamento: "AT" },
+      { abbrev: "zc", name: "Zacarias", testamento: "AT" },
+      { abbrev: "ml", name: "Malaquias", testamento: "AT" },
+      { abbrev: "mt", name: "Mateus", testamento: "NT" },
+      { abbrev: "mc", name: "Marcos", testamento: "NT" },
+      { abbrev: "lc", name: "Lucas", testamento: "NT" },
+      { abbrev: "jo", name: "João", testamento: "NT" },
+      { abbrev: "at", name: "Atos", testamento: "NT" },
+      { abbrev: "rm", name: "Romanos", testamento: "NT" },
+      { abbrev: "1co", name: "1 Coríntios", testamento: "NT" },
+      { abbrev: "2co", name: "2 Coríntios", testamento: "NT" },
+      { abbrev: "gl", name: "Gálatas", testamento: "NT" },
+      { abbrev: "ef", name: "Efésios", testamento: "NT" },
+      { abbrev: "fp", name: "Filipenses", testamento: "NT" },
+      { abbrev: "cl", name: "Colossenses", testamento: "NT" },
+      { abbrev: "1ts", name: "1 Tessalonicenses", testamento: "NT" },
+      { abbrev: "2ts", name: "2 Tessalonicenses", testamento: "NT" },
+      { abbrev: "1tm", name: "1 Timóteo", testamento: "NT" },
+      { abbrev: "2tm", name: "2 Timóteo", testamento: "NT" },
+      { abbrev: "tt", name: "Tito", testamento: "NT" },
+      { abbrev: "fm", name: "Filemom", testamento: "NT" },
+      { abbrev: "hb", name: "Hebreus", testamento: "NT" },
+      { abbrev: "tg", name: "Tiago", testamento: "NT" },
+      { abbrev: "1pe", name: "1 Pedro", testamento: "NT" },
+      { abbrev: "2pe", name: "2 Pedro", testamento: "NT" },
+      { abbrev: "1jo", name: "1 João", testamento: "NT" },
+      { abbrev: "2jo", name: "2 João", testamento: "NT" },
+      { abbrev: "3jo", name: "3 João", testamento: "NT" },
+      { abbrev: "jd", name: "Judas", testamento: "NT" },
+      { abbrev: "ap", name: "Apocalipse", testamento: "NT" }
+    ];
+
+    const bibliaCache = {};
+    let versaoAtual = 'nvi';
+    let livroIndex = 0;
+    let capituloNum = 1;
+    let versiculoNum = 0; // 0 = Todos
+    let tamanhoFonte = 100;
+
+    async function carregarBibliaVersao(versao) {
+      if (bibliaCache[versao]) return bibliaCache[versao];
+      try {
+        const res = await fetch(`/api/biblia/${versao}`);
+        if (!res.ok) throw new Error('Erro ao carregar versão');
+        const data = await res.json();
+        bibliaCache[versao] = data;
+        return data;
+      } catch (err) {
+        console.error('Erro ao carregar Bíblia:', err);
+        return null;
+      }
+    }
+
+    function popularSelectLivros() {
+      const select = document.getElementById('selectLivro');
+      select.innerHTML = '';
+      LIVROS_BIBLIA.forEach((livro, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = `${livro.name} (${livro.testamento})`;
+        select.appendChild(opt);
+      });
+      select.value = livroIndex;
+    }
+
+    function popularSelectCapitulos() {
+      const data = bibliaCache[versaoAtual];
+      const select = document.getElementById('selectCapitulo');
+      select.innerHTML = '';
+      if (!data || !data[livroIndex]) return;
+
+      const totalCapitulos = data[livroIndex].chapters.length;
+      for (let i = 1; i <= totalCapitulos; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `Capítulo ${i}`;
+        select.appendChild(opt);
+      }
+      select.value = capituloNum;
+    }
+
+    function popularSelectVersiculos() {
+      const data = bibliaCache[versaoAtual];
+      const select = document.getElementById('selectVersiculo');
+      select.innerHTML = '<option value="0">Todos os versículos</option>';
+      if (!data || !data[livroIndex] || !data[livroIndex].chapters[capituloNum - 1]) return;
+
+      const totalVersiculos = data[livroIndex].chapters[capituloNum - 1].length;
+      for (let i = 1; i <= totalVersiculos; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `Versículo ${i}`;
+        select.appendChild(opt);
+      }
+      select.value = versiculoNum;
+    }
+
+    async function trocarVersao() {
+      versaoAtual = document.getElementById('selectVersao').value;
+      document.getElementById('badgeVersao').textContent = versaoAtual.toUpperCase();
+      await carregarBibliaVersao(versaoAtual);
+      popularSelectCapitulos();
+      popularSelectVersiculos();
+      renderizarTexto();
+    }
+
+    function trocarLivro() {
+      livroIndex = parseInt(document.getElementById('selectLivro').value);
+      capituloNum = 1;
+      versiculoNum = 0;
+      popularSelectCapitulos();
+      popularSelectVersiculos();
+      renderizarTexto();
+    }
+
+    function trocarCapitulo() {
+      capituloNum = parseInt(document.getElementById('selectCapitulo').value);
+      versiculoNum = 0;
+      popularSelectVersiculos();
+      renderizarTexto();
+    }
+
+    function trocarVersiculo() {
+      versiculoNum = parseInt(document.getElementById('selectVersiculo').value);
+      renderizarTexto();
+    }
+
+    function capituloAnterior() {
+      if (capituloNum > 1) {
+        capituloNum--;
+      } else if (livroIndex > 0) {
+        livroIndex--;
+        const data = bibliaCache[versaoAtual];
+        capituloNum = data[livroIndex].chapters.length;
+        document.getElementById('selectLivro').value = livroIndex;
+        popularSelectCapitulos();
+      } else {
+        return;
+      }
+      versiculoNum = 0;
+      document.getElementById('selectCapitulo').value = capituloNum;
+      popularSelectVersiculos();
+      renderizarTexto();
+    }
+
+    function proximoCapitulo() {
+      const data = bibliaCache[versaoAtual];
+      if (!data) return;
+      const totalCapitulos = data[livroIndex].chapters.length;
+
+      if (capituloNum < totalCapitulos) {
+        capituloNum++;
+      } else if (livroIndex < LIVROS_BIBLIA.length - 1) {
+        livroIndex++;
+        capituloNum = 1;
+        document.getElementById('selectLivro').value = livroIndex;
+        popularSelectCapitulos();
+      } else {
+        return;
+      }
+      versiculoNum = 0;
+      document.getElementById('selectCapitulo').value = capituloNum;
+      popularSelectVersiculos();
+      renderizarTexto();
+    }
+
+    function renderizarTexto() {
+      const data = bibliaCache[versaoAtual];
+      const corpoEl = document.getElementById('corpoTexto');
+      const tituloEl = document.getElementById('tituloLeitura');
+
+      if (!data || !data[livroIndex]) {
+        corpoEl.innerHTML = '<div class="p-8 text-center text-xs text-slate-500 font-bold">Erro ao carregar dados.</div>';
+        return;
+      }
+
+      const livroNome = LIVROS_BIBLIA[livroIndex].name;
+      tituloEl.textContent = `${livroNome} ${capituloNum}`;
+
+      const versiculos = data[livroIndex].chapters[capituloNum - 1];
+      if (!versiculos) {
+        corpoEl.innerHTML = '<div class="p-8 text-center text-xs text-slate-500 font-bold">Capítulo não encontrado.</div>';
+        return;
+      }
+
+      let html = '';
+      versiculos.forEach((texto, idx) => {
+        const vNum = idx + 1;
+        const isDestaque = versiculoNum > 0 && versiculoNum === vNum;
+        if (versiculoNum === 0 || isDestaque) {
+          html += `
+            <p id="v-${vNum}" class="p-2 rounded-lg transition-colors ${isDestaque ? 'bg-amber-100/80 border border-amber-300 font-bold text-slate-900 shadow-2xs' : 'hover:bg-slate-50'}">
+              <sup class="font-mono text-xs font-bold text-icr mr-1">${vNum}</sup>${escaparHTML(texto)}
+            </p>
+          `;
+        }
+      });
+
+      corpoEl.innerHTML = html;
+
+      if (versiculoNum > 0) {
+        const vEl = document.getElementById(`v-${versiculoNum}`);
+        if (vEl) vEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      atualizarBotoesNavegacao();
+    }
+
+    function atualizarBotoesNavegacao() {
+      const data = bibliaCache[versaoAtual];
+      const btnAnt = document.getElementById('btnCapAnterior');
+      const btnProx = document.getElementById('btnCapProximo');
+
+      if (livroIndex === 0 && capituloNum === 1) {
+        btnAnt.disabled = true;
+        btnAnt.classList.add('opacity-40', 'pointer-events-none');
+      } else {
+        btnAnt.disabled = false;
+        btnAnt.classList.remove('opacity-40', 'pointer-events-none');
+      }
+
+      if (data && livroIndex === LIVROS_BIBLIA.length - 1 && capituloNum === data[livroIndex].chapters.length) {
+        btnProx.disabled = true;
+        btnProx.classList.add('opacity-40', 'pointer-events-none');
+      } else {
+        btnProx.disabled = false;
+        btnProx.classList.remove('opacity-40', 'pointer-events-none');
+      }
+    }
+
+    function alterarTamanhoFonte(delta) {
+      tamanhoFonte = Math.min(Math.max(tamanhoFonte + delta, 60), 200);
+      const el = document.getElementById('corpoTexto');
+      if (el) {
+        el.style.fontSize = `${tamanhoFonte / 100 * 1.05}rem`;
+      }
+      const label = document.getElementById('fontSizeLabel');
+      if (label) {
+        label.textContent = `${tamanhoFonte}%`;
+      }
+    }
+
+    function resetarTamanhoFonte() {
+      tamanhoFonte = 100;
+      alterarTamanhoFonte(0);
+    }
+
+    function alternarModoProjetor() {
+      document.body.classList.toggle('projector-mode');
+    }
+
+    function escaparHTML(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      popularSelectLivros();
+      await carregarBibliaVersao(versaoAtual);
+      popularSelectCapitulos();
+      popularSelectVersiculos();
+      renderizarTexto();
+    });
+  </script>
+</body>
+</html>

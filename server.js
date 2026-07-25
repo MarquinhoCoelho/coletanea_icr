@@ -27,6 +27,24 @@ app.get('/api/hinos', (req, res) => {
     }
 });
 
+app.get('/api/biblia/:versao', (req, res) => {
+    try {
+        const versao = req.params.versao.toLowerCase();
+        if (!['nvi', 'acf', 'aa'].includes(versao)) {
+            return res.status(400).json({ error: 'Versão da Bíblia inválida.' });
+        }
+        const filePath = path.join(__dirname, 'biblia', `${versao}.json`);
+        if (!fs.existsSync(filePath)) {
+            return res.status(404).json({ error: 'Arquivo de versão não encontrado.' });
+        }
+        const data = fs.readFileSync(filePath, 'utf8');
+        res.setHeader('Content-Type', 'application/json');
+        res.send(data);
+    } catch (err) {
+        res.status(500).json({ error: 'Erro ao carregar Bíblia.' });
+    }
+});
+
 app.post('/api/hinos', (req, res) => {
     try {
         const { senha, titulo, tom, letra } = req.body;
