@@ -1,0 +1,23 @@
+{
+  "name": "Coletânea de Louvores - ICR Florianópolis",
+  "short_name": "Coletânea ICR",
+  "description": "Coletânea de Louvores da Igreja Cristã Maranata - Florianópolis",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f6856",
+  "icons": [
+    {
+      "src": "icr_logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icr_logo_maior.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

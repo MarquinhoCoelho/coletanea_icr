@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Coletânea de Louvores - ICR Florianópolis</title>
   <link rel="icon" type="image/png" href="icr_logo.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f6856">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -53,6 +55,20 @@
           <span class="text-[10px] font-semibold text-slate-500 hidden sm:inline">ICR Florianópolis</span>
         </div>
       </a>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button 
+        id="btnInstalarPWA" 
+        onclick="instalarAppPWA()" 
+        class="px-3 py-1.5 text-xs font-bold text-icr bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/80 rounded-lg transition-all shadow-2xs flex items-center gap-1.5"
+      >
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+          <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
+        </svg>
+        <span class="hidden sm:inline">Instalar Aplicativo</span>
+        <span class="sm:hidden">Instalar</span>
+      </button>
     </div>
   </header>
 
@@ -105,6 +121,44 @@
     let ordemAlfabetica = false;
     let exibirCifras = false;
     let tamanhoFonte = 100;
+    let deferredPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const btn = document.getElementById('btnInstalarPWA');
+      if (btn) btn.classList.remove('hidden');
+    });
+
+    async function instalarAppPWA() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          console.log('PWA aceito pelo usuário');
+        }
+        deferredPrompt = null;
+        const btn = document.getElementById('btnInstalarPWA');
+        if (btn) btn.classList.add('hidden');
+      } else {
+        alert('Para instalar no seu celular:\n\nNo iPhone / iPad (Safari):\n1. Toque no botão Compartilhar (quadrado com seta pra cima).\n2. Escolha "Adicionar à Tela de Início".\n\nNo Android (Chrome):\n1. Toque nos 3 pontinhos no topo superior direito.\n2. Escolha "Instalar aplicativo" ou "Adicionar à tela inicial".');
+      }
+    }
+
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+      window.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('btnInstalarPWA');
+        if (btn) btn.classList.add('hidden');
+      });
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => {
+          console.log('ServiceWorker error:', err);
+        });
+      });
+    }
 
     async function carregarHinos() {
       try {
