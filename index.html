@@ -103,6 +103,7 @@
     let hinosData = [];
     let hinoAtualId = null;
     let ordemAlfabetica = false;
+    let exibirCifras = true;
 
     async function carregarHinos() {
       try {
@@ -179,23 +180,60 @@
       hinoAtualId = id;
       const numFormatado = String(hino.id).padStart(2, '0');
 
+      let textoExibicao = hino.letra;
+      if (hino.cifraAtiva && !exibirCifras) {
+        textoExibicao = filtrarSomenteLetras(hino.letra);
+      }
+
       const container = document.getElementById('conteudoHino');
       container.innerHTML = `
         <article class="bg-white w-full">
           <header class="mb-4 pb-3 border-b-2 border-icr">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="font-mono text-xs font-bold text-icr bg-icr-light border border-icr-border px-1.5 py-0.5">#${numFormatado}</span>
+            <div class="flex items-center justify-between gap-2 mb-1.5 flex-wrap">
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-xs font-bold text-icr bg-icr-light border border-icr-border px-1.5 py-0.5">#${numFormatado}</span>
+                ${hino.tom ? `<span class="text-xs font-bold text-slate-700 bg-slate-100 border border-slate-300 px-2 py-0.5">Tom: ${escaparHTML(hino.tom)}</span>` : ''}
+              </div>
+              ${hino.cifraAtiva ? `
+                <button onclick="alternarCifras()" class="px-2.5 py-1 text-xs font-bold transition-colors ${exibirCifras ? 'bg-icr text-white border-icr' : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'} border">
+                  Cifras: ${exibirCifras ? 'ON' : 'OFF'}
+                </button>
+              ` : ''}
             </div>
             <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">${escaparHTML(hino.titulo)}</h1>
           </header>
 
           <div class="w-full">
-            <pre class="lyric-content" id="lyricContent">${escaparHTML(hino.letra)}</pre>
+            <pre class="lyric-content" id="lyricContent">${escaparHTML(textoExibicao)}</pre>
           </div>
         </article>
       `;
 
       renderizarLista();
+    }
+
+    function alternarCifras() {
+      exibirCifras = !exibirCifras;
+      if (hinoAtualId !== null) {
+        exibirHino(hinoAtualId);
+      }
+    }
+
+    function ehLinhaDeCifra(linha) {
+      if (!linha || !linha.trim()) return false;
+      const tokens = linha.trim().split(/\s+/);
+      const regexCifra = /^[A-G](b|#)?(m|maj|min|dim|aug|add|sus|M)?\d*(?:\/[A-G](b|#)?)?$/;
+      let count = 0;
+      for (const token of tokens) {
+        if (regexCifra.test(token)) count++;
+      }
+      return (count / tokens.length) > 0.5;
+    }
+
+    function filtrarSomenteLetras(texto) {
+      if (!texto) return '';
+      const linhas = texto.split('\n');
+      return linhas.filter(l => !ehLinhaDeCifra(l)).join('\n');
     }
 
     function alternarModoProjetor() {

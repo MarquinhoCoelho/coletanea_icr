@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administração de Louvores - ICR Florianópolis</title>
+  <link rel="icon" type="image/png" href="icr_logo.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Roboto', 'sans-serif'],
+            mono: ['Roboto Mono', 'monospace']
+          },
+          colors: {
+            icr: {
+              DEFAULT: '#0f6856',
+              dark: '#0a4d3f',
+              light: '#f0f7f5',
+              border: '#c3e2db'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col font-sans antialiased">
+
+  <div id="loginModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-300 w-full max-w-sm p-6 shadow-2xl">
+      <div class="flex items-center gap-3 mb-4">
+        <img src="icr_logo_sem_fundo.png" onerror="this.onerror=null; this.src='icr_logo_maior.png';" alt="ICR Logo" class="h-8 w-auto">
+        <h2 class="text-base font-extrabold text-slate-900">Acesso Restrito</h2>
+      </div>
+      <p class="text-xs text-slate-600 mb-4">Digite a senha administrativa para acessar o painel de gerenciamento.</p>
+      
+      <form onsubmit="autenticarAdmin(event)" class="space-y-3">
+        <div>
+          <label for="senhaInput" class="block text-xs font-bold text-slate-700 mb-1">Senha</label>
+          <input 
+            type="password" 
+            id="senhaInput" 
+            class="w-full h-9 px-3 text-xs bg-white border border-slate-300 outline-none focus:border-icr focus:ring-1 focus:ring-icr" 
+            placeholder="Digite a senha..." 
+            required 
+            autofocus
+          >
+        </div>
+        <div id="loginError" class="text-xs font-bold text-red-600 hidden">Senha incorreta. Tente novamente.</div>
+        <button type="submit" class="w-full h-9 bg-icr hover:bg-icr-dark text-white text-xs font-bold transition-colors">
+          Entrar
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div id="adminPanel" class="hidden flex-1 flex flex-col">
+    <header class="h-14 bg-white border-b border-slate-200 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30">
+      <div class="flex items-center gap-3">
+        <img src="icr_logo_sem_fundo.png" onerror="this.onerror=null; this.src='icr_logo_maior.png';" alt="ICR Logo" class="h-8 w-auto">
+        <span class="text-sm font-extrabold text-icr">Painel Administrativo</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="index.html" target="_blank" class="px-3 py-1 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition-colors">
+          Ver Site Principal
+        </a>
+        <button onclick="sairAdmin()" class="px-3 py-1 text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors">
+          Sair
+        </button>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-8">
+      
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 bg-white p-4 border border-slate-200">
+        <div>
+          <h1 class="text-xl font-extrabold text-slate-900">Gerenciamento de Louvores</h1>
+          <p class="text-xs text-slate-500">Adicione, edite ou remova louvores do repertório oficial.</p>
+        </div>
+        <button onclick="abrirModalForm(null)" class="px-4 py-2 bg-icr hover:bg-icr-dark text-white text-xs font-bold transition-colors flex items-center gap-1.5">
+          + Novo Louvor
+        </button>
+      </div>
+
+      <div class="mb-4">
+        <input 
+          type="text" 
+          id="buscaAdminInput" 
+          oninput="filtrarTabelaAdmin()" 
+          class="w-full h-9 px-3 text-xs bg-white border border-slate-300 outline-none focus:border-icr" 
+          placeholder="Buscar por número ou título..."
+        >
+      </div>
+
+      <div class="bg-white border border-slate-200 overflow-x-auto">
+        <table class="w-full text-left text-xs divide-y divide-slate-200">
+          <thead class="bg-slate-50 text-slate-700 font-bold uppercase text-[11px]">
+            <tr>
+              <th class="p-3 w-16 text-center">Nº</th>
+              <th class="p-3">Título</th>
+              <th class="p-3 w-24">Tom</th>
+              <th class="p-3 w-32 text-center">Cifra Ativada</th>
+              <th class="p-3 w-36 text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaAdminBody" class="divide-y divide-slate-100 font-medium"></tbody>
+        </table>
+        <div id="tabelaVazia" class="p-8 text-center text-xs text-slate-500 hidden">
+          Nenhum louvor encontrado.
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="formModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white border border-slate-300 w-full max-w-2xl p-6 max-h-[90vh] flex flex-col shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-4">
+        <h2 id="formModalTitle" class="text-base font-extrabold text-slate-900">Novo Louvor</h2>
+        <button onclick="fecharModalForm()" class="text-slate-400 hover:text-slate-700 text-lg font-bold">&times;</button>
+      </div>
+
+      <form id="hinoForm" onsubmit="salvarHino(event)" class="space-y-4 flex-1 overflow-y-auto pr-1">
+        <input type="hidden" id="hinoId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Título do Louvor *</label>
+            <input 
+              type="text" 
+              id="hinoTitulo" 
+              class="w-full h-9 px-3 text-xs bg-white border border-slate-300 outline-none focus:border-icr" 
+              placeholder="Ex: Tua Voz, Senhor" 
+              required
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Tom Musical</label>
+            <input 
+              type="text" 
+              id="hinoTom" 
+              class="w-full h-9 px-3 text-xs bg-white border border-slate-300 outline-none focus:border-icr" 
+              placeholder="Ex: G, Am, C"
+            >
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Letra e Cifra *</label>
+          <textarea 
+            id="hinoLetra" 
+            rows="10" 
+            class="w-full p-3 text-xs font-mono bg-slate-50 border border-slate-300 outline-none focus:border-icr focus:bg-white leading-relaxed" 
+            placeholder="Cole aqui a letra e/ou cifra do louvor..." 
+            required
+          ></textarea>
+        </div>
+
+        <div class="flex items-center gap-2 p-3 bg-slate-50 border border-slate-200">
+          <input 
+            type="checkbox" 
+            id="hinoCifraAtiva" 
+            class="w-4 h-4 text-icr border-slate-300 rounded-none focus:ring-icr"
+          >
+          <label for="hinoCifraAtiva" class="text-xs font-bold text-slate-800 cursor-pointer">
+            Ativar Cifras neste louvor (exibe a opção de alternar cifras na tela principal)
+          </label>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
+          <button type="button" onclick="fecharModalForm()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors">
+            Cancelar
+          </button>
+          <button type="submit" class="px-4 py-2 bg-icr hover:bg-icr-dark text-white text-xs font-bold transition-colors">
+            Salvar Louvor
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let adminSenha = '';
+    let adminHinos = [];
+
+    function autenticarAdmin(e) {
+      e.preventDefault();
+      const inputVal = document.getElementById('senhaInput').value.trim();
+      if (inputVal === 'seusandro') {
+        adminSenha = inputVal;
+        document.getElementById('loginModal').classList.add('hidden');
+        document.getElementById('adminPanel').classList.remove('hidden');
+        carregarTabelaAdmin();
+      } else {
+        document.getElementById('loginError').classList.remove('hidden');
+      }
+    }
+
+    function sairAdmin() {
+      adminSenha = '';
+      document.getElementById('senhaInput').value = '';
+      document.getElementById('loginError').classList.add('hidden');
+      document.getElementById('adminPanel').classList.add('hidden');
+      document.getElementById('loginModal').classList.remove('hidden');
+    }
+
+    async function carregarTabelaAdmin() {
+      try {
+        const res = await fetch('/api/hinos');
+        if (!res.ok) throw new Error('Erro ao buscar louvores');
+        adminHinos = await res.json();
+        renderizarTabelaAdmin();
+      } catch (err) {
+        alert('Erro ao carregar dados dos louvores.');
+      }
+    }
+
+    function renderizarTabelaAdmin() {
+      const termo = document.getElementById('buscaAdminInput').value.trim().toLowerCase();
+      const bodyEl = document.getElementById('tabelaAdminBody');
+      const vaziaEl = document.getElementById('tabelaVazia');
+
+      let filtrados = adminHinos.filter(h => {
+        const numStr = String(h.id);
+        const numPad = String(h.id).padStart(2, '0');
+        const tit = h.titulo.toLowerCase();
+        return tit.includes(termo) || numStr === termo || numPad === termo;
+      });
+
+      filtrados.sort((a, b) => a.id - b.id);
+      bodyEl.innerHTML = '';
+
+      if (filtrados.length === 0) {
+        vaziaEl.classList.remove('hidden');
+        return;
+      } else {
+        vaziaEl.classList.add('hidden');
+      }
+
+      filtrados.forEach(hino => {
+        const numPad = String(hino.id).padStart(2, '0');
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition-colors';
+        tr.innerHTML = `
+          <td class="p-3 text-center font-mono font-bold text-slate-500">${numPad}</td>
+          <td class="p-3 font-bold text-slate-800">${escaparHTML(hino.titulo)}</td>
+          <td class="p-3">${hino.tom ? `<span class="px-2 py-0.5 bg-slate-100 border border-slate-300 font-bold text-[11px]">${escaparHTML(hino.tom)}</span>` : '-'}</td>
+          <td class="p-3 text-center">
+            ${hino.cifraAtiva ? '<span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px]">Sim</span>' : '<span class="px-2 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 text-[11px]">Não</span>'}
+          </td>
+          <td class="p-3 text-right space-x-1">
+            <button onclick="abrirModalForm(${hino.id})" class="px-2.5 py-1 text-[11px] font-bold text-icr bg-icr-light hover:bg-icr-border border border-icr-border transition-colors">
+              Editar
+            </button>
+            <button onclick="confirmarExclusao(${hino.id}, '${escaparHTML(hino.titulo)}')" class="px-2.5 py-1 text-[11px] font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors">
+              Excluir
+            </button>
+          </td>
+        `;
+        bodyEl.appendChild(tr);
+      });
+    }
+
+    function filtrarTabelaAdmin() {
+      renderizarTabelaAdmin();
+    }
+
+    function abrirModalForm(id) {
+      const modal = document.getElementById('formModal');
+      const titleEl = document.getElementById('formModalTitle');
+      const idInput = document.getElementById('hinoId');
+      const tituloInput = document.getElementById('hinoTitulo');
+      const tomInput = document.getElementById('hinoTom');
+      const letraInput = document.getElementById('hinoLetra');
+      const cifraInput = document.getElementById('hinoCifraAtiva');
+
+      if (id === null) {
+        titleEl.textContent = 'Novo Louvor';
+        idInput.value = '';
+        tituloInput.value = '';
+        tomInput.value = '';
+        letraInput.value = '';
+        cifraInput.checked = false;
+      } else {
+        const hino = adminHinos.find(h => h.id === id);
+        if (!hino) return;
+        titleEl.textContent = 'Editar Louvor #' + String(hino.id).padStart(2, '0');
+        idInput.value = hino.id;
+        tituloInput.value = hino.titulo;
+        tomInput.value = hino.tom || '';
+        letraInput.value = hino.letra;
+        cifraInput.checked = !!hino.cifraAtiva;
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function fecharModalForm() {
+      document.getElementById('formModal').classList.add('hidden');
+    }
+
+    async function salvarHino(e) {
+      e.preventDefault();
+      const id = document.getElementById('hinoId').value;
+      const titulo = document.getElementById('hinoTitulo').value.trim();
+      const tom = document.getElementById('hinoTom').value.trim();
+      const letra = document.getElementById('hinoLetra').value.trim();
+      const cifraAtiva = document.getElementById('hinoCifraAtiva').checked;
+
+      const payload = {
+        senha: adminSenha,
+        titulo,
+        tom,
+        letra,
+        cifraAtiva
+      };
+
+      try {
+        let res;
+        if (id) {
+          res = await fetch(`/api/hinos/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          res = await fetch('/api/hinos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        if (!res.ok) throw new Error('Falha ao salvar louvor');
+
+        fecharModalForm();
+        carregarTabelaAdmin();
+      } catch (err) {
+        alert('Erro ao salvar louvor. Verifique os dados e tente novamente.');
+      }
+    }
+
+    async function confirmarExclusao(id, titulo) {
+      if (confirm(`Tem certeza que deseja excluir o louvor #${String(id).padStart(2, '0')} - "${titulo}"?`)) {
+        try {
+          const res = await fetch(`/api/hinos/${id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ senha: adminSenha })
+          });
+          if (!res.ok) throw new Error('Falha ao excluir louvor');
+          carregarTabelaAdmin();
+        } catch (err) {
+          alert('Erro ao excluir louvor.');
+        }
+      }
+    }
+
+    function escaparHTML(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
