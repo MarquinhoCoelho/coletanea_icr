@@ -82,11 +82,11 @@
       </div>
     </aside>
 
-    <main class="flex-1 p-3 sm:p-6 max-w-4xl mx-auto w-full min-w-0">
+    <main class="flex-1 p-4 sm:p-8 max-w-4xl mx-auto w-full min-w-0">
       <div id="conteudoHino">
         <div class="flex flex-col items-center justify-center min-h-[300px] text-center p-6 border border-slate-200 bg-slate-50 rounded-none">
           <h2 class="text-base font-bold text-slate-800 mb-1">Coletânea ICR Florianópolis</h2>
-          <p class="text-xs text-slate-600 max-w-md">Selecione um louvor no menu lateral para visualizar a letra e cifras.</p>
+          <p class="text-xs text-slate-600 max-w-md">Selecione um louvor no menu lateral para visualizar a letra completa.</p>
         </div>
       </div>
     </main>
@@ -97,12 +97,6 @@
     let hinosData = [];
     let hinoAtualId = null;
     let ordemAlfabetica = false;
-    let exibirCifras = true;
-    let tamanhoFontePercent = 100;
-    let autoscrollAtivo = false;
-    let autoscrollTimer = null;
-    let autoscrollVelocidade = 1;
-    let ferramentasAbertas = false;
 
     async function carregarHinos() {
       try {
@@ -182,227 +176,26 @@
       const container = document.getElementById('conteudoHino');
       container.innerHTML = `
         <article class="bg-white w-full">
-          <header class="mb-3 pb-2 border-b border-slate-200">
-            <div class="flex items-center gap-2 mb-1 flex-wrap">
+          <header class="mb-4 pb-3 border-b-2 border-icr">
+            <div class="flex items-center gap-2 mb-1.5 flex-wrap">
               <span class="font-mono text-xs font-bold text-icr bg-icr-light border border-icr-border px-1.5 py-0.5">#${numFormatado}</span>
               ${hino.tom ? `<span class="text-xs font-bold text-slate-700 bg-slate-100 border border-slate-300 px-2 py-0.5">Tom: ${escaparHTML(hino.tom)}</span>` : ''}
               ${hino.observacao ? `<span class="text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5">Observação: ${escaparHTML(hino.observacao)}</span>` : ''}
             </div>
-            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight mt-1">${escaparHTML(hino.titulo)}</h1>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">${escaparHTML(hino.titulo)}</h1>
           </header>
 
-          <div class="mb-4 bg-slate-50 border border-slate-200">
-            <button onclick="toggleFerramentas()" class="w-full flex items-center justify-between px-3 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors">
-              <span>Opções & Ferramentas</span>
-              <span id="ferramentasIcon" class="text-slate-500 font-mono text-[10px]">${ferramentasAbertas ? '▲ Recolher' : '▼ Expandir'}</span>
-            </button>
-
-            <div id="ferramentasPanel" class="${ferramentasAbertas ? 'flex' : 'hidden'} p-3 border-t border-slate-200 flex-col gap-3 text-xs font-bold text-slate-700">
-              <div class="flex items-center justify-between gap-2 flex-wrap">
-                <span class="text-slate-500 font-extrabold uppercase text-[10px]">Tamanho do Texto:</span>
-                <div class="flex items-center gap-1">
-                  <button class="px-2.5 py-1 bg-white border border-slate-300 hover:border-icr hover:text-icr transition-colors" onclick="alterarTamanhoFonte(-10)">A-</button>
-                  <span class="font-mono px-2 text-center" id="fontSizeLabel">${tamanhoFontePercent}%</span>
-                  <button class="px-2.5 py-1 bg-white border border-slate-300 hover:border-icr hover:text-icr transition-colors" onclick="alterarTamanhoFonte(10)">A+</button>
-                  <button class="px-2.5 py-1 bg-white border border-slate-300 hover:border-icr hover:text-icr transition-colors" onclick="resetarTamanhoFonte()">Reset</button>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between gap-2 flex-wrap border-t border-slate-200 pt-2.5">
-                <span class="text-slate-500 font-extrabold uppercase text-[10px]">Exibição de Cifras:</span>
-                <button class="px-3 py-1 ${exibirCifras ? 'bg-icr text-white border-icr' : 'bg-white text-slate-700 border-slate-300'} border hover:opacity-90 transition-all" onclick="alternarExibicaoCifras()">
-                  ${exibirCifras ? 'Cifras: Ativadas' : 'Somente Letra'}
-                </button>
-              </div>
-
-              <div class="flex items-center justify-between gap-2 flex-wrap border-t border-slate-200 pt-2.5">
-                <span class="text-slate-500 font-extrabold uppercase text-[10px]">Rolagem Automática:</span>
-                <div class="flex items-center gap-1">
-                  <button class="px-3 py-1 ${autoscrollAtivo ? 'bg-icr text-white border-icr' : 'bg-white text-slate-700 border-slate-300'} border hover:opacity-90 transition-all" onclick="alternarAutoScroll()">
-                    ${autoscrollAtivo ? 'Rolagem: Ativa' : 'Iniciar Auto-scroll'}
-                  </button>
-                  <select class="h-7 px-1 bg-white border border-slate-300 text-xs font-bold outline-none" onchange="mudarVelocidadeAutoScroll(this.value)">
-                    <option value="1" ${autoscrollVelocidade == 1 ? 'selected' : ''}>1x</option>
-                    <option value="1.5" ${autoscrollVelocidade == 1.5 ? 'selected' : ''}>1.5x</option>
-                    <option value="2" ${autoscrollVelocidade == 2 ? 'selected' : ''}>2x</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-end gap-2 border-t border-slate-200 pt-2.5">
-                <button class="px-3 py-1 bg-white border border-slate-300 hover:border-icr hover:text-icr transition-colors" onclick="alternarModoProjetor()">Modo Projetor</button>
-                <button class="px-3 py-1 bg-white border border-slate-300 hover:border-icr hover:text-icr transition-colors" onclick="copiarLetra()">Copiar Letra</button>
-              </div>
-            </div>
-          </div>
-
           <div class="w-full">
-            <pre class="lyric-content" id="lyricContent">${formatarLetraECifra(hino.letra)}</pre>
+            <pre class="lyric-content" id="lyricContent">${escaparHTML(hino.letra)}</pre>
           </div>
         </article>
       `;
 
-      aplicarTamanhoFonte();
       renderizarLista();
-    }
-
-    function toggleFerramentas() {
-      ferramentasAbertas = !ferramentasAbertas;
-      const panel = document.getElementById('ferramentasPanel');
-      const icon = document.getElementById('ferramentasIcon');
-      if (panel && icon) {
-        if (ferramentasAbertas) {
-          panel.classList.remove('hidden');
-          panel.classList.add('flex');
-          icon.textContent = '▲ Recolher';
-        } else {
-          panel.classList.add('hidden');
-          panel.classList.remove('flex');
-          icon.textContent = '▼ Expandir';
-        }
-      }
-    }
-
-    function formatarLetraECifra(texto) {
-      if (!texto) return '';
-
-      const linhas = texto.split('\n');
-      let resultadoHtml = [];
-
-      for (let i = 0; i < linhas.length; i++) {
-        let linha = linhas[i];
-
-        if (linha.startsWith('[Tom:')) {
-          continue;
-        }
-
-        if (/^\s*\[.+\]\s*$/.test(linha)) {
-          const nomeSecao = linha.replace(/\[|\]/g, '').trim();
-          resultadoHtml.push(`<span class="song-section-header">${escaparHTML(nomeSecao)}</span>`);
-          continue;
-        }
-
-        if (!exibirCifras) {
-          if (ehLinhaDeCifra(linha)) {
-            continue;
-          }
-        }
-
-        if (ehLinhaDeCifra(linha)) {
-          const linhaNormalizada = linha.replace(/\s{5,}/g, '    ');
-          resultadoHtml.push(`<span class="chord-line">${destacarAcordesNaLinha(linhaNormalizada)}</span>`);
-        } else {
-          resultadoHtml.push(escaparHTML(linha));
-        }
-      }
-
-      return resultadoHtml.join('\n');
-    }
-
-    function ehLinhaDeCifra(linha) {
-      if (!linha || linha.trim().length === 0) return false;
-      const palavras = linha.trim().split(/\s+/);
-      const padraoCifra = /^[A-G]([#b])?(m|maj|min|dim|aug|sus[24]?)?([0-9])?(\/[A-G][#b]?)?$/;
-
-      let contagemCifras = 0;
-      for (const p of palavras) {
-        if (padraoCifra.test(p)) {
-          contagemCifras++;
-        }
-      }
-      return (contagemCifras / palavras.length) >= 0.5;
-    }
-
-    function destacarAcordesNaLinha(linha) {
-      const padraoCifra = /\b[A-G](?:[#b])?(?:m|maj|min|dim|aug|sus[24]?)?(?:[0-9])?(?:\/[A-G][#b]?)?\b/g;
-      const linhaEscapada = escaparHTML(linha);
-      return linhaEscapada.replace(padraoCifra, (match) => {
-        return `<span class="chord">${match}</span>`;
-      });
-    }
-
-    function alterarTamanhoFonte(delta) {
-      tamanhoFontePercent = Math.max(70, Math.min(200, tamanhoFontePercent + delta));
-      aplicarTamanhoFonte();
-    }
-
-    function resetarTamanhoFonte() {
-      tamanhoFontePercent = 100;
-      aplicarTamanhoFonte();
-    }
-
-    function aplicarTamanhoFonte() {
-      const lyricContent = document.getElementById('lyricContent');
-      const fontSizeLabel = document.getElementById('fontSizeLabel');
-      if (lyricContent) {
-        lyricContent.style.setProperty('--lyric-font-size', `calc(1.05rem * ${tamanhoFontePercent / 100})`);
-      }
-      if (fontSizeLabel) {
-        fontSizeLabel.textContent = `${tamanhoFontePercent}%`;
-      }
-    }
-
-    function alternarExibicaoCifras() {
-      exibirCifras = !exibirCifras;
-      if (hinoAtualId !== null) {
-        exibirHino(hinoAtualId);
-      }
-    }
-
-    function alternarAutoScroll() {
-      autoscrollAtivo = !autoscrollAtivo;
-      if (hinoAtualId !== null) {
-        exibirHino(hinoAtualId);
-      }
-      if (autoscrollAtivo) {
-        iniciarAutoScroll();
-      } else {
-        pararAutoScroll();
-      }
-    }
-
-    function mudarVelocidadeAutoScroll(val) {
-      autoscrollVelocidade = parseFloat(val) || 1;
-      if (autoscrollAtivo) {
-        pararAutoScroll();
-        iniciarAutoScroll();
-      }
-    }
-
-    function iniciarAutoScroll() {
-      pararAutoScroll();
-      const intervaloMs = Math.max(10, 35 / autoscrollVelocidade);
-      autoscrollTimer = setInterval(() => {
-        window.scrollBy({ top: 1, behavior: 'smooth' });
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 5) {
-          autoscrollAtivo = false;
-          pararAutoScroll();
-          if (hinoAtualId !== null) exibirHino(hinoAtualId);
-        }
-      }, intervaloMs);
-    }
-
-    function pararAutoScroll() {
-      if (autoscrollTimer) {
-        clearInterval(autoscrollTimer);
-        autoscrollTimer = null;
-      }
     }
 
     function alternarModoProjetor() {
       document.body.classList.toggle('projector-mode');
-    }
-
-    async function copiarLetra() {
-      const hino = hinosData.find(h => h.id === hinoAtualId);
-      if (!hino) return;
-
-      try {
-        await navigator.clipboard.writeText(`${hino.titulo}\n\n${hino.letra}`);
-        alert('Letra copiada com sucesso!');
-      } catch (err) {
-        console.error('Erro ao copiar:', err);
-      }
     }
 
     function alternarOrdenacao() {
