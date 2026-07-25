@@ -4,6 +4,8 @@ services:
   app:
     build: .
     container_name: coletanea_icr
-    restart: always
     ports:
       - "127.0.0.1:3050:3000"
+    volumes:
+      - ./data.json:/app/data.json
+    restart: always
