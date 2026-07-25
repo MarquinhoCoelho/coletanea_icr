@@ -29,7 +29,7 @@ app.get('/api/hinos', (req, res) => {
 
 app.post('/api/hinos', (req, res) => {
     try {
-        const { senha, titulo, tom, letra, cifraAtiva } = req.body;
+        const { senha, titulo, tom, letra } = req.body;
         if (senha !== 'seusandro') {
             return res.status(401).json({ error: 'Senha incorreta.' });
         }
@@ -44,8 +44,7 @@ app.post('/api/hinos', (req, res) => {
             id: novoId,
             titulo: titulo.trim(),
             tom: tom ? tom.trim() : '',
-            letra: letra.trim(),
-            cifraAtiva: !!cifraAtiva
+            letra: letra.trim()
         };
 
         dados.push(novoHino);
@@ -59,7 +58,7 @@ app.post('/api/hinos', (req, res) => {
 app.put('/api/hinos/:id', (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        const { senha, titulo, tom, letra, cifraAtiva } = req.body;
+        const { senha, titulo, tom, letra } = req.body;
 
         if (senha !== 'seusandro') {
             return res.status(401).json({ error: 'Senha incorreta.' });
@@ -76,8 +75,7 @@ app.put('/api/hinos/:id', (req, res) => {
             id: id,
             titulo: titulo ? titulo.trim() : dados[index].titulo,
             tom: tom !== undefined ? tom.trim() : dados[index].tom,
-            letra: letra ? letra.trim() : dados[index].letra,
-            cifraAtiva: cifraAtiva !== undefined ? !!cifraAtiva : dados[index].cifraAtiva
+            letra: letra ? letra.trim() : dados[index].letra
         };
 
         salvarDados(dados);

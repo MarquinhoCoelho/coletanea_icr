@@ -102,8 +102,7 @@
             <tr>
               <th class="p-3.5 w-16 text-center">Nº</th>
               <th class="p-3.5">Título</th>
-              <th class="p-3.5 w-24">Tom</th>
-              <th class="p-3.5 w-32 text-center">Cifra Ativada</th>
+              <th class="p-3.5 w-28">Tom</th>
               <th class="p-3.5 w-36 text-right">Ações</th>
             </tr>
           </thead>
@@ -149,25 +148,14 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Letra e Cifra *</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Letra / Cifra *</label>
           <textarea 
             id="hinoLetra" 
-            rows="10" 
+            rows="12" 
             class="w-full p-3 text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-icr focus:bg-white focus:ring-2 focus:ring-icr/10 transition-all leading-relaxed" 
             placeholder="Cole aqui a letra e/ou cifra do louvor..." 
             required
           ></textarea>
-        </div>
-
-        <div class="flex items-center gap-2.5 p-3.5 bg-emerald-50/60 border border-emerald-200/60 rounded-lg">
-          <input 
-            type="checkbox" 
-            id="hinoCifraAtiva" 
-            class="w-4 h-4 text-icr border-slate-300 rounded focus:ring-icr"
-          >
-          <label for="hinoCifraAtiva" class="text-xs font-bold text-slate-800 cursor-pointer">
-            Ativar Cifras neste louvor (exibe o botão de alternar cifras na tela principal)
-          </label>
         </div>
 
         <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
@@ -248,9 +236,6 @@
           <td class="p-3.5 text-center font-mono font-bold text-slate-400">${numPad}</td>
           <td class="p-3.5 font-bold text-slate-800">${escaparHTML(hino.titulo)}</td>
           <td class="p-3.5">${hino.tom ? `<span class="px-2 py-0.5 bg-slate-100 border border-slate-200 rounded-md font-bold text-[11px]">${escaparHTML(hino.tom)}</span>` : '-'}</td>
-          <td class="p-3.5 text-center">
-            ${hino.cifraAtiva ? '<span class="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-full font-bold text-[11px]">Sim</span>' : '<span class="px-2.5 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 rounded-full text-[11px]">Não</span>'}
-          </td>
           <td class="p-3.5 text-right space-x-1.5">
             <button onclick="abrirModalForm(${hino.id})" class="px-2.5 py-1 text-[11px] font-bold text-icr bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/80 rounded-md transition-colors">
               Editar
@@ -275,7 +260,6 @@
       const tituloInput = document.getElementById('hinoTitulo');
       const tomInput = document.getElementById('hinoTom');
       const letraInput = document.getElementById('hinoLetra');
-      const cifraInput = document.getElementById('hinoCifraAtiva');
 
       if (id === null) {
         titleEl.textContent = 'Novo Louvor';
@@ -283,7 +267,6 @@
         tituloInput.value = '';
         tomInput.value = '';
         letraInput.value = '';
-        cifraInput.checked = false;
       } else {
         const hino = adminHinos.find(h => h.id === id);
         if (!hino) return;
@@ -292,7 +275,6 @@
         tituloInput.value = hino.titulo;
         tomInput.value = hino.tom || '';
         letraInput.value = hino.letra;
-        cifraInput.checked = !!hino.cifraAtiva;
       }
 
       modal.classList.remove('hidden');
@@ -308,14 +290,12 @@
       const titulo = document.getElementById('hinoTitulo').value.trim();
       const tom = document.getElementById('hinoTom').value.trim();
       const letra = document.getElementById('hinoLetra').value.trim();
-      const cifraAtiva = document.getElementById('hinoCifraAtiva').checked;
 
       const payload = {
         senha: adminSenha,
         titulo,
         tom,
-        letra,
-        cifraAtiva
+        letra
       };
 
       try {

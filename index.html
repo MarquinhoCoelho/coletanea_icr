@@ -103,7 +103,7 @@
     let hinosData = [];
     let hinoAtualId = null;
     let ordemAlfabetica = false;
-    let exibirCifras = true;
+    let exibirCifras = false;
     let tamanhoFonte = 100;
 
     async function carregarHinos() {
@@ -182,7 +182,7 @@
       const numFormatado = String(hino.id).padStart(2, '0');
 
       let textoExibicao = hino.letra;
-      if (hino.cifraAtiva && !exibirCifras) {
+      if (!exibirCifras) {
         textoExibicao = filtrarSomenteLetras(hino.letra);
       }
 
@@ -201,11 +201,9 @@
 
             <div class="flex items-center justify-between gap-3 flex-wrap bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
               <div>
-                ${hino.cifraAtiva ? `
-                  <button onclick="alternarCifras()" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${exibirCifras ? 'bg-icr text-white shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'}">
-                    Cifras: ${exibirCifras ? 'ON' : 'OFF'}
-                  </button>
-                ` : ''}
+                <button onclick="alternarCifras()" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${exibirCifras ? 'bg-icr text-white shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'}">
+                  Cifras: ${exibirCifras ? 'ON' : 'OFF'}
+                </button>
               </div>
 
               <div class="flex items-center gap-1.5 bg-white border border-slate-200 p-1 rounded-lg">
