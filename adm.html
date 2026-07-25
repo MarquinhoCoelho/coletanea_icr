@@ -11,7 +11,7 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Roboto', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
             mono: ['Roboto Mono', 'monospace']
           },
           colors: {
@@ -28,30 +28,30 @@
   </script>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col font-sans antialiased">
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans antialiased">
 
-  <div id="loginModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
-    <div class="bg-white border border-slate-300 w-full max-w-sm p-6 shadow-2xl">
+  <div id="loginModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 w-full max-w-sm p-6 rounded-2xl shadow-xl">
       <div class="flex items-center gap-3 mb-4">
         <img src="icr_logo_sem_fundo.png" onerror="this.onerror=null; this.src='icr_logo_maior.png';" alt="ICR Logo" class="h-8 w-auto">
         <h2 class="text-base font-extrabold text-slate-900">Acesso Restrito</h2>
       </div>
-      <p class="text-xs text-slate-600 mb-4">Digite a senha administrativa para acessar o painel de gerenciamento.</p>
+      <p class="text-xs text-slate-500 mb-4 leading-relaxed">Digite a senha administrativa para acessar o painel de gerenciamento.</p>
       
-      <form onsubmit="autenticarAdmin(event)" class="space-y-3">
+      <form onsubmit="autenticarAdmin(event)" class="space-y-3.5">
         <div>
           <label for="senhaInput" class="block text-xs font-bold text-slate-700 mb-1">Senha</label>
           <input 
             type="password" 
             id="senhaInput" 
-            class="w-full h-9 px-3 text-xs bg-white border border-slate-300 outline-none focus:border-icr focus:ring-1 focus:ring-icr" 
+            class="w-full h-9 px-3 text-xs bg-white border border-slate-200 rounded-lg outline-none focus:border-icr focus:ring-2 focus:ring-icr/10 transition-all" 
             placeholder="Digite a senha..." 
             required 
             autofocus
           >
         </div>
         <div id="loginError" class="text-xs font-bold text-red-600 hidden">Senha incorreta. Tente novamente.</div>
-        <button type="submit" class="w-full h-9 bg-icr hover:bg-icr-dark text-white text-xs font-bold transition-colors">
+        <button type="submit" class="w-full h-9 bg-icr hover:bg-icr-dark text-white text-xs font-bold rounded-lg transition-colors shadow-xs">
           Entrar
         </button>
       </form>
@@ -59,16 +59,16 @@
   </div>
 
   <div id="adminPanel" class="hidden flex-1 flex flex-col">
-    <header class="h-14 bg-white border-b border-slate-200 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30">
+    <header class="h-14 bg-white border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
       <div class="flex items-center gap-3">
         <img src="icr_logo_sem_fundo.png" onerror="this.onerror=null; this.src='icr_logo_maior.png';" alt="ICR Logo" class="h-8 w-auto">
         <span class="text-sm font-extrabold text-icr">Painel Administrativo</span>
       </div>
       <div class="flex items-center gap-3">
-        <a href="index.html" target="_blank" class="px-3 py-1 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition-colors">
+        <a href="index.html" target="_blank" class="px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-colors">
           Ver Site Principal
         </a>
-        <button onclick="sairAdmin()" class="px-3 py-1 text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors">
+        <button onclick="sairAdmin()" class="px-3 py-1.5 text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition-colors">
           Sair
         </button>
       </div>
@@ -76,12 +76,12 @@
 
     <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-8">
       
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 bg-white p-4 border border-slate-200">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 bg-white p-5 border border-slate-200/80 rounded-2xl shadow-xs">
         <div>
           <h1 class="text-xl font-extrabold text-slate-900">Gerenciamento de Louvores</h1>
           <p class="text-xs text-slate-500">Adicione, edite ou remova louvores do repertório oficial.</p>
         </div>
-        <button onclick="abrirModalForm(null)" class="px-4 py-2 bg-icr hover:bg-icr-dark text-white text-xs font-bold transition-colors flex items-center gap-1.5">
+        <button onclick="abrirModalForm(null)" class="px-4 py-2 bg-icr hover:bg-icr-dark text-white text-xs font-bold rounded-lg transition-colors shadow-xs flex items-center gap-1.5">
           + Novo Louvor
         </button>
       </div>
@@ -91,20 +91,20 @@
           type="text" 
           id="buscaAdminInput" 
           oninput="filtrarTabelaAdmin()" 
-          class="w-full h-9 px-3 text-xs bg-white border border-slate-300 outline-none focus:border-icr" 
+          class="w-full h-9 px-3 text-xs bg-white border border-slate-200 rounded-lg outline-none focus:border-icr focus:ring-2 focus:ring-icr/10 transition-all shadow-2xs" 
           placeholder="Buscar por número ou título..."
         >
       </div>
 
-      <div class="bg-white border border-slate-200 overflow-x-auto">
+      <div class="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-xs">
         <table class="w-full text-left text-xs divide-y divide-slate-200">
-          <thead class="bg-slate-50 text-slate-700 font-bold uppercase text-[11px]">
+          <thead class="bg-slate-50 text-slate-600 font-bold uppercase text-[11px]">
             <tr>
-              <th class="p-3 w-16 text-center">Nº</th>
-              <th class="p-3">Título</th>
-              <th class="p-3 w-24">Tom</th>
-              <th class="p-3 w-32 text-center">Cifra Ativada</th>
-              <th class="p-3 w-36 text-right">Ações</th>
+              <th class="p-3.5 w-16 text-center">Nº</th>
+              <th class="p-3.5">Título</th>
+              <th class="p-3.5 w-24">Tom</th>
+              <th class="p-3.5 w-32 text-center">Cifra Ativada</th>
+              <th class="p-3.5 w-36 text-right">Ações</th>
             </tr>
           </thead>
           <tbody id="tabelaAdminBody" class="divide-y divide-slate-100 font-medium"></tbody>
@@ -116,9 +116,9 @@
     </main>
   </div>
 
-  <div id="formModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white border border-slate-300 w-full max-w-2xl p-6 max-h-[90vh] flex flex-col shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-4">
+  <div id="formModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white border border-slate-200 w-full max-w-2xl p-6 rounded-2xl max-h-[90vh] flex flex-col shadow-xl">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
         <h2 id="formModalTitle" class="text-base font-extrabold text-slate-900">Novo Louvor</h2>
         <button onclick="fecharModalForm()" class="text-slate-400 hover:text-slate-700 text-lg font-bold">&times;</button>
       </div>
@@ -132,7 +132,7 @@
             <input 
               type="text" 
               id="hinoTitulo" 
-              class="w-full h-9 px-3 text-xs bg-white border border-slate-300 outline-none focus:border-icr" 
+              class="w-full h-9 px-3 text-xs bg-white border border-slate-200 rounded-lg outline-none focus:border-icr focus:ring-2 focus:ring-icr/10 transition-all" 
               placeholder="Ex: Tua Voz, Senhor" 
               required
             >
@@ -142,7 +142,7 @@
             <input 
               type="text" 
               id="hinoTom" 
-              class="w-full h-9 px-3 text-xs bg-white border border-slate-300 outline-none focus:border-icr" 
+              class="w-full h-9 px-3 text-xs bg-white border border-slate-200 rounded-lg outline-none focus:border-icr focus:ring-2 focus:ring-icr/10 transition-all" 
               placeholder="Ex: G, Am, C"
             >
           </div>
@@ -153,28 +153,28 @@
           <textarea 
             id="hinoLetra" 
             rows="10" 
-            class="w-full p-3 text-xs font-mono bg-slate-50 border border-slate-300 outline-none focus:border-icr focus:bg-white leading-relaxed" 
+            class="w-full p-3 text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-icr focus:bg-white focus:ring-2 focus:ring-icr/10 transition-all leading-relaxed" 
             placeholder="Cole aqui a letra e/ou cifra do louvor..." 
             required
           ></textarea>
         </div>
 
-        <div class="flex items-center gap-2 p-3 bg-slate-50 border border-slate-200">
+        <div class="flex items-center gap-2.5 p-3.5 bg-emerald-50/60 border border-emerald-200/60 rounded-lg">
           <input 
             type="checkbox" 
             id="hinoCifraAtiva" 
-            class="w-4 h-4 text-icr border-slate-300 rounded-none focus:ring-icr"
+            class="w-4 h-4 text-icr border-slate-300 rounded focus:ring-icr"
           >
           <label for="hinoCifraAtiva" class="text-xs font-bold text-slate-800 cursor-pointer">
-            Ativar Cifras neste louvor (exibe a opção de alternar cifras na tela principal)
+            Ativar Cifras neste louvor (exibe o botão de alternar cifras na tela principal)
           </label>
         </div>
 
-        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
-          <button type="button" onclick="fecharModalForm()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors">
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="fecharModalForm()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors">
             Cancelar
           </button>
-          <button type="submit" class="px-4 py-2 bg-icr hover:bg-icr-dark text-white text-xs font-bold transition-colors">
+          <button type="submit" class="px-4 py-2 bg-icr hover:bg-icr-dark text-white text-xs font-bold rounded-lg transition-colors shadow-xs">
             Salvar Louvor
           </button>
         </div>
@@ -245,17 +245,17 @@
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50 transition-colors';
         tr.innerHTML = `
-          <td class="p-3 text-center font-mono font-bold text-slate-500">${numPad}</td>
-          <td class="p-3 font-bold text-slate-800">${escaparHTML(hino.titulo)}</td>
-          <td class="p-3">${hino.tom ? `<span class="px-2 py-0.5 bg-slate-100 border border-slate-300 font-bold text-[11px]">${escaparHTML(hino.tom)}</span>` : '-'}</td>
-          <td class="p-3 text-center">
-            ${hino.cifraAtiva ? '<span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px]">Sim</span>' : '<span class="px-2 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 text-[11px]">Não</span>'}
+          <td class="p-3.5 text-center font-mono font-bold text-slate-400">${numPad}</td>
+          <td class="p-3.5 font-bold text-slate-800">${escaparHTML(hino.titulo)}</td>
+          <td class="p-3.5">${hino.tom ? `<span class="px-2 py-0.5 bg-slate-100 border border-slate-200 rounded-md font-bold text-[11px]">${escaparHTML(hino.tom)}</span>` : '-'}</td>
+          <td class="p-3.5 text-center">
+            ${hino.cifraAtiva ? '<span class="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-full font-bold text-[11px]">Sim</span>' : '<span class="px-2.5 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 rounded-full text-[11px]">Não</span>'}
           </td>
-          <td class="p-3 text-right space-x-1">
-            <button onclick="abrirModalForm(${hino.id})" class="px-2.5 py-1 text-[11px] font-bold text-icr bg-icr-light hover:bg-icr-border border border-icr-border transition-colors">
+          <td class="p-3.5 text-right space-x-1.5">
+            <button onclick="abrirModalForm(${hino.id})" class="px-2.5 py-1 text-[11px] font-bold text-icr bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/80 rounded-md transition-colors">
               Editar
             </button>
-            <button onclick="confirmarExclusao(${hino.id}, '${escaparHTML(hino.titulo)}')" class="px-2.5 py-1 text-[11px] font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors">
+            <button onclick="confirmarExclusao(${hino.id}, '${escaparHTML(hino.titulo)}')" class="px-2.5 py-1 text-[11px] font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-md transition-colors">
               Excluir
             </button>
           </td>
